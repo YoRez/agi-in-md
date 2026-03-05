@@ -2,11 +2,9 @@
 
 ## The Falsifiable Claim
 
-**Deepest Problem**: The code presents a "composable sequence" of checkers, but actually encodes a tightly coupled state machine with hidden temporal dependenci    -> Done (87s) -> 406 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_conservation_law_task_H.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

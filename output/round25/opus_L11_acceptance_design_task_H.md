@@ -2,11 +2,9 @@
 
 ## The Claim (Specific, Falsifiable)
 
-**The deepest structural problem is that the authentication pipeline conflates identity establishment, claim accumulation, and authorization decision into a si    -> Done (161s) -> 375 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/opus_L11_acceptance_design_task_H.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

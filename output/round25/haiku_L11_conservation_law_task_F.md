@@ -4,11 +4,9 @@
 
 **DEEPEST STRUCTURAL PROBLEM:**  
 This EventBus exhibits **"observability collapse"** — it cannot distinguish between:
-- (a) An event having genuinely no handlers (archite    -> Done (102s) -> 510 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_conservation_law_task_F.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

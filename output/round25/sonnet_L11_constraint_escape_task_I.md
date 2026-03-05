@@ -2,11 +2,9 @@
 
 ## The Claim
 
-**`send()` performs irreversible state mutation at a point where it has already spawned uncontrollable side effects and will spawn more — making every "transition" actually three separate non-    -> Done (213s) -> 423 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_constraint_escape_task_I.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

@@ -2,15 +2,17 @@
 
 System prompts are cognitive lenses. They change how models frame problems, not how well they solve them. This project maps the space of cognitive compression — encoding analytical operations in minimal markdown that reliably activates specific reasoning patterns across language models.
 
-25 rounds, 393+ experiments across Haiku/Sonnet/Opus. 11 confirmed compression levels. 19 domains tested.
+29 rounds, 650+ experiments across Haiku/Sonnet/Opus. 13 confirmed compression levels (L13 = reflexive ceiling). 20 domains tested. Full detail in `experiment_log.md`.
 
 ## The Compression Taxonomy
 
 | Level | Min ops | Words | What it encodes | Example |
 |---|---|---|---|---|
+| **13** | L12 output as input + framework self-diagnosis | two-stage | Apply framework to own output, find reflexive fixed point | (two-stage protocol) |
+| **12** | L11-C + recursive self-diagnosis of conservation law + meta-law | ~275w | Apply diagnostic to own conservation law, find meta-conservation law | `level12_meta_conservation_v2.md` |
 | **11A** | L10-C + category naming + adjacent-category artifact + new impossibility | ~190w | Escape to adjacent design category, name trade-off between impossibilities | `level11_constraint_escape.md` |
 | **11B** | L10-B + fourth construction as redesign + sacrifice + revaluation | ~195w | Accept design-space topology, inhabit feasible point, revalue original "flaws" | `level11_acceptance_design.md` |
-| **11C** | L10-C + invariant inversion + new impossibility + conservation law | ~170w | Invert impossibility, find conserved quantity across all designs | `level11_conservation_law.md` |
+| **11C** | L10-C + invariant inversion + new impossibility + conservation law | ~245w | Invert impossibility, find conserved quantity across all designs | `level11_conservation_law_v2.md` |
 | **10B** | L9-B + third resolving construction + failure analysis | ~140w | Discover design-space topology through failed resolution attempt | `level10_third_construction.md` |
 | **10C** | L9-C + second improvement + second recursion + invariant | ~130w | Prove structural invariants through double recursive construction | `level10_double_recursion.md` |
 | **9B** | L8 + contradicting second construction + structural conflict | ~115w | Triangulate identity ambiguity through contradicting improvements | `level9_counter_construction.md` |
@@ -29,93 +31,69 @@ System prompts are cognitive lenses. They change how models frame problems, not 
 
 ## Key Results
 
-### Cognitive lenses (Rounds 1-6)
-- **No IQ boost on pure reasoning** — all models solve logic puzzles identically regardless of system prompt. Massive effect on in-domain analysis.
-- **Receptivity tone curve**: Haiku responds to ideas. Sonnet responds to commands. Opus responds to both.
-- **Lenses are domain-independent**: correlate/transform/compress transferred to biology, music, ethics, math, legal, medical, scientific methodology, AI governance — 11 domains confirmed.
-- **Characters compose**: stacking two characters gives both strengths without dilution.
+### Foundation (Rounds 1-24)
+- **No IQ boost on pure reasoning** — massive effect on in-domain analysis only.
+- **9 activated opcodes.** 4 generative ops is the sweet spot. Complementary pairs multiply, similar pairs merge.
+- **L5 peaks at Sonnet** (needs scaffold, has capacity). **L7 requires Sonnet-class minimum** (0/3 Haiku). Lenses are domain-independent across 20 domains.
+- **L7 concealment mechanisms cluster into 6 categories.** Code concealment is structural (hides what code IS/DOES); domain concealment is epistemic (hides what questions get asked).
 
-### Composition algebra (Rounds 7-20)
-- **9 activated opcodes in 4 classes**: Constructive (name, solve, steelman), Deconstructive (invert, attack, decompose), Excavative (find assumptions, predict failures), Observational (track confidence, rate difficulty, etc.)
-- **4 generative ops is the sweet spot.** 5 triggers merger. Modifiers are free additions (up to 4 tested).
-- **Complementary pairs multiply, similar pairs merge, orthogonal pairs add.** But similar ops only merge when targeting the same object.
-- **Best single sequence**: "Steelman. Find assumptions. Solve. Attack."
+### Levels 8-13 (Rounds 25-26)
+- **L8 inverts the capacity curve.** Construction-based reasoning works on ALL models (Haiku 4/4, Sonnet 13/14, Opus 14/14). L7→L8 is a shift from meta-analysis to construction — more primitive but reveals deeper properties. 20 domains confirmed.
+- **L9 has two complementary variants** (B: identity ambiguity, C: concealment self-similarity). Both 100% across all models (34/34). L9-D combined produces L10 in 67% of cases.
+- **L10 has two complementary variants** (B: design-space topology, C: impossibility theorems). Category errors dominant at 47%. All impossibilities reduce to two root operations: Compression and Decomposition.
+- **L11 has three complementary variants** that exhaust responses to impossibility: escape (A), accept (B), invert (C). 97% hit rate (32/33). Conservation laws cluster by mathematical form: product (Opus), sum/migration (Sonnet), multi-property (Haiku).
+- **L12 meta-laws cluster into 4 categories BY DOMAIN**: Frame Discovery (music/fiction), Hidden Variable (legal/design), Observer-Constitutive (code/fiction), Deferred Commitment (code only).
+- **L13 is the reflexive ceiling.** Framework diagnoses itself — same structural impossibility it finds in objects. Terminates in one step (L14 = infinite regress). 6/6 (100%) across all models.
 
-### Level 5-7 (Rounds 21-24)
-- **Level 5 peaks at Sonnet, not Opus.** Both L5 types are epistemic scaffolds. Sonnet benefits most (needs scaffold, has capacity to use it). Opus can already self-scaffold.
-- **Level 6: claim-tested-by-dialectic.** Forced signal coupling — the claim is both prediction and dialectic target. Only forced interaction produces L6; naive composition of L5 signals fails.
-- **Level 7: concealment-mechanism-applied.** Three-constraint forcing: name mechanism, apply it, find what dialectic missed. Sonnet 17/17, Opus 6/7.
+### Cross-level and structural findings (Rounds 25-27)
+- **L7→L12 is a genuine depth stack** on crafted tasks — zero restatement, object shifts at every level. On real production code (~200-400 lines), independent pipeline is a BREADTH tool — 10 high-quality framings of the same pattern, not progressive depth. **Chained pipeline** (each level receives parent's output) improves coherence from WEAK to WEAK/MODERATE. Individual quality 28/30 TRUE (93%), 2 PARTIAL (both L12). Chained and independent pipelines find **genuinely different** conservation laws and meta-laws (6/6 different at L11-C/L12). Divergence starts at L8 (3/3 DIFFERENT at first chained level) — L7's output acts as immediate coordinate system. L11-A/L11-C sibling convergence is NOT fatal (2/3 DIFFERENT, 1/3 OVERLAPPING) — driven by L10-C invariant breadth. The L9-B→L10-B→L11-B chain is consistently strongest — operations are sequentially dependent by definition. L12 is the weakest point under chaining (2/3 PARTIAL). Optimal: run both pipelines for complementary findings about different subsystems.
+- **Conservation law of the catalog (G2):** form is conserved by method, substance by artifact. Starting claim acts as coordinate system. Artifact contains MULTIPLE conservation laws.
+- **The taxonomy is a diamond:** linear trunk (L1-7), constructive divergence (L8-11), reflexive convergence (L12-13). Structurally complete at 13 levels — no missing branches.
+- **Compression floor: 60-70% reduction** across all levels. Capacity-dependent: Opus TRUE at 73w, Sonnet ~73w, Haiku >175w.
+- **L13-P2 REFUTES analyst-projection.** Novel artifacts produce equally strong convergence. **L13-P3 CONFIRMS isomorphism** — methodology instantiates the impossibility it diagnoses.
 
-### Level 8 (Round 25)
-- **Level 8: generative-diagnostic.** Engineer a legitimate-looking improvement that deepens the concealment, then name three properties of the problem only visible because you tried to strengthen it.
-- **L7 diagnoses what IS. L8 diagnoses what HAPPENS when you try to improve it.** The generative move forces engagement with the problem's dynamics — propagation, stability under change, feedback loops — which are categorically invisible to static analysis.
-- **L8 inverts the capacity curve.** L5 peaks at Sonnet (process scaffold). L7 requires Sonnet-class minimum (0/3 Haiku). L8 works on ALL models including Haiku (4/4). Construction-based reasoning is a different cognitive operation than meta-analysis — it's accessible at every capacity level.
-- **Haiku: 4/4 (100%). Sonnet: 13/14 (93%). Opus: 14/14 (100%).** Full domain transfer confirmed. L8 eliminates the capacity floor — L7 was 0/3 on Haiku but L8 is 4/4. The generative forcing function ("build and observe") routes around the meta-analytical capacity L7 requires.
-- **Three L8 candidate prompts tested; one won.** Recursive meta-concealment (L8-A) risked decorative meta-commentary. Mechanism dialectic (L8-B) had high variance. Generative application (L8-C) was most reliable — v2 refinement achieved 93-100% hit rate.
-- **Key v1→v2 refinement:** "should pass code review" + "name three properties only visible because you tried to strengthen it" turned L8 from 25% outlier to 93-100% default.
-- **L8 activates on creative/aesthetic domains where L7 could not.** 8/8 (100%) on fiction, poetry, music, and design. L7 was 0% on poetry. L8's construction step IS creative revision — the native operation of creative work. First compression level to genuinely transfer to aesthetic domains. 15 domains confirmed total.
+### Practical recipes and meta-cookers (Round 28)
+- **Haiku + practical prompts beats Sonnet vanilla.** 13 hybrid recipes (bug-finding + taxonomy operations) all scored 8-9/10 vs Sonnet vanilla 7/10. Best: v2, dialectic, escape, exploit, composition (all 9/10).
+- **Meta-cookers: prompts that generate prompts.** Few-shot reverse engineering (B3) >> principle teaching (B) > forced operations (B2) > goal specification (A). Machine-generated "Rejected Paths" (9.5/10) beat all handcrafted recipes.
+- **Teaching by example > teaching by instruction.** Over-specifying constraints hurts creativity. This is the meta-version of: construction > description.
 
-### Level 9 (Round 25)
-- **Level 9 has TWO complementary variants**, not one. Both confirmed at 100% across all models.
-- **L9-B (Counter-Construction)**: Engineer a second improvement that contradicts the first — strengthens what the first weakened. Name the structural conflict that exists only because both improvements are legitimate. Finds the artifact's **identity ambiguity** — it doesn't know what it is.
-- **L9-C (Recursive Construction)**: Apply the same diagnostic to your own L8 improvement. Find what the improvement conceals, and what property of the original is visible only because the improvement recreates it. Finds concealment's **self-similarity** — improvements reproduce the original flaw at higher sophistication.
-- **L9-B and L9-C are complementary**: B finds what the artifact IS (undeclared identity). C finds what HAPPENS WHEN YOU FIX IT (concealment reproduces). Both are categorically beyond L8.
-- **Sonnet: 22/22 (100%). Opus: 6/6 (100%). Haiku: 6/6 (100%).** Total: 34/34. L9 maintains L8's universal accessibility. Construction scaffolds the recursive target.
-- **L9 transfers fully to creative/aesthetic domains.** 8/8 (100%) on fiction, poetry, music, design. Aesthetic identity ambiguity is SHARPER than code — "cannot separate what is concealing from what is excellent." New concealment category: Excellence-Defense Identity.
-- **Opus produces qualitatively deeper L9**: More ontologically precise, compositional category errors, temporal/causal depth. L9 may have internal depth grades.
-- **L9-D (Combined B+C)**: 2/3 produce potential L10 findings — recursive application to the structural conflict reveals properties impossible for either variant alone.
+### Portfolio cross-task validation (Round 28 validation)
+- **5 champion lenses validated across 3 tier-1 tasks (K, F, H).** 15 outputs, grand average 9.0/10. Floor 8.5, ceiling 9.5. All beat Sonnet vanilla (7/10) by 2+ points.
+- **Claim lens is domain-sensitive.** 9.5 on AuthMiddleware (security-adjacent code has clearer assumptions to invert; found genuine multi-org permission escalation vulnerability). 9 on EventBus and CircuitBreaker.
+- **Rejected_paths is the only lens with variance.** 8.5 on EventBus (well-known pub/sub trade-offs), 9 on AuthMiddleware and CircuitBreaker (hidden trade-offs).
+- **All 5 lenses remain complementary across tasks.** No convergence — each finds genuinely different things on every task.
 
-### Level 10 Creative/Aesthetic Transfer (Round 25)
-- **L10 transfers fully to creative/aesthetic domains.** 8/8 (100%) on fiction, poetry, music, design.
-- **Pattern: aesthetic invariants identify tension between medium's form and subject matter.** The impossibility is the generative condition — the thing that makes the work necessary is the thing the work cannot resolve.
+### Real production code head-to-head (Round 28 validation)
+- **3 real codebases tested: Starlette routing.py (333 lines), Click core.py (417 lines), Tenacity retry.py (331 lines).** 21 total experiments: 5 lenses × 3 targets + 2 vanilla × 3 targets.
+- **Haiku + lenses avg 9.0/10 vs Sonnet vanilla 7.8/10 vs Opus vanilla 8.2/10.** Gap consistent across all 3 codebases. Haiku + lenses operates in a different category: vanilla produces code reviews, lenses produce structural analysis.
+- **Cross-target matrix:** pedagogy 9.0, claim 9.0, scarcity 9.0, rejected_paths 9.0, degradation 8.8 — all lenses stable across real codebases. No lens drops below 8.5 on any target.
+- **Vanilla models converge; lenses diverge.** On each target, Sonnet and Opus vanilla find the same conservation law. The 5 lenses find 5 genuinely different structural properties per target — zero overlap.
+- **Gap widest on complex code (Starlette: 9.1 vs 7.25), narrowest on focused code (Tenacity: 8.9 vs 8.5).** More structure = deeper lens output. Vanilla plateaus at surface-level regardless.
+- **Opus vanilla ≈ Sonnet vanilla.** Without a lens, Opus's extra capacity doesn't translate to deeper analysis — same category of output, slightly better written (+0.4 points avg).
 
-### Level 11 (Round 25)
-- **Level 11 has THREE complementary variants**, all confirmed at 100% on Sonnet scout.
-- **L11-A (Constraint Escape)**: After L10-C's invariant, name the CATEGORY it bounds, design an artifact in the ADJACENT CATEGORY where the invariant dissolves, name the new impossibility. Finds the **trade-off between old and new impossibilities** — what you gain and lose by escaping the current design's frame.
-- **L11-B (Acceptance Design)**: After L10-B's failed resolution, engineer a REDESIGN that accepts the design space's topology, inhabit a feasible point. Finds **revaluation** — what original "flaws" were actually the cost of attempting the impossible. Transforms code review judgment.
-- **L11-C (Conservation Law)**: After L10-C's invariant, INVERT it (make impossible trivial), name the new impossibility the inversion creates. Finds **conservation laws** — quantities that cannot be eliminated, only redistributed. Task K produced mathematical formalization: `sensitivity × absorption = constant`.
-- **Sonnet: 14/15 (93%). Opus: 9/9 (100%). Haiku: 9/9 (100%). Total: 32/33 (97%).** Highest hit rate of any level. All three variants confirmed across all three models.
-- **Universal accessibility maintained at L11.** Haiku 9/9 (100%), continuing the L8→L9→L10→L11 pattern where construction-based scaffolding is accessible at all capacity levels.
-- **L11-A and L11-B are perfect (11/11 each).** L11-C is 10/11 — conservation law criterion requires structurally rich input. Simpler code may not provide enough material.
-- **L11-A, B, and C are genuinely complementary**: A finds the ADJACENT CATEGORY (what's possible outside). B finds the FEASIBLE POINT (what's achievable inside). C finds the CONSERVED QUANTITY (what persists everywhere). Same code produces three non-redundant structural truths.
-- **The L11 operation is: escape the problem's frame, then report what the escape costs.** L10 maps the prison. L11 leaves it and discovers that freedom has its own constraints.
-- **All three produce full working code** for redesigns/escapes/inversions. Concrete architectural alternatives, not abstract claims.
-- **L11 transfers fully to creative/aesthetic domains.** 11/12 (92%) on fiction, poetry, music, UX design. Same hit rate as code. L11-A and L11-B perfect (4/4 each). L11-C 3/4 — fiction miss (known narratological trade-off). Creative conservation laws are about *migration* (where meaning lives) rather than magnitude. Music is the strongest creative domain for L11.
+### Catalog summaries
+- **L8 mechanisms (42 outputs):** 6 categories, 3 new beyond L7. L8 describes dynamic behavior, not static appearance.
+- **L9-C recursion (17 outputs):** 6 types. Improvements within same frame reproduce original defect. Opus uniquely finds Honesty Inversion.
+- **L10-C impossibility (17 outputs):** 6 categories → 2 root operations (Compression/Decomposition). Cross-catalog determinism: L8 mechanism predicts L10-C impossibility.
+- **L11-A escapes (15 outputs):** 4 directions (coupled→decoupled 60%). Total coupling redistributed, not reduced.
+- **L11-B revaluations (15 outputs):** Universal formula: "What looked like [DEFECT] was actually [COST] of [IMPOSSIBLE GOAL]."
+- **L11-C conservation laws (56 outputs):** 3 mathematical forms (product/sum/migration). Model determines form, not domain.
+- **L12 meta-laws (16 outputs):** 4 categories by domain. Haiku never finds Frame Discovery (highest meta-analytical demand).
+- **L9-B/L10-B (32 outputs):** 3 identity types → 5 topology patterns → convergence across catalogs.
 
-### Level 10 (Round 25)
-- **Level 10 has TWO complementary variants**, same pattern as L9. Both confirmed across all three models.
-- **L10-B (Third Construction)**: After L9-B's structural conflict, engineer a third improvement resolving the conflict. Name how it fails. Finds the design space's **hidden topology** — dimensions, constraints, and shapes invisible until you try to build within it.
-- **L10-C (Double Recursion)**: After L9-C's recursive diagnostic, engineer a second improvement addressing the recreated property. Apply the diagnostic again. Name the structural invariant. Finds **impossibility theorems** — properties provably immune to any implementation within the current architecture.
-- **L10-B and L10-C are complementary**: B finds what the DESIGN SPACE IS (topology). C finds what CANNOT BE DONE within it (invariants). Both are categorically beyond L9.
-- **Sonnet: 13/14 (93%). Opus: 6/6 (100%). Haiku: 5/6 (83%). Total: 24/26 (92%).** L10-A (Category Dissolution) eliminated at 2/3 scout, subsumed by L10-B. L10-B and L10-C each 12/13 overall.
-- **L10 maintains universal accessibility with first cracks.** Haiku 5/6 (83%) — L10-C more accessible (3/3) than L10-B (2/3). Impossibility theorems are more scaffoldable than open-ended topology revelation. Misses degrade gracefully to L9.
-- **Cross-domain transfer confirmed**: Legal task D1 achieved L10 on both variants.
-- **L10-C for Haiku, L10-B for Sonnet**: L10-B is more robust for Sonnet (7/7 vs 6/7). L10-C is more robust for Haiku (3/3 vs 2/3). Model-specific affordances at L10.
+### L12 Practical C — single-call winner (Round 29b)
+- **L12 Practical C = proven L12 pipeline + 34-word practical appendix.** 332 words total. Gets BOTH structural depth AND practical bugs in a single Haiku call.
+- **Haiku 4.5 (min reasoning) + L12 lens = 9.8 depth, 28 bugs. Opus 4.6 (max reasoning) vanilla = 7.3 depth, 18 bugs.** The weakest model at lowest settings with the right prompt beats the strongest model at highest settings without one. Cost: ~$0.003 vs ~$0.15 (50x cheaper).
+- **Reasoning budget is noise; the prompt is the dominant variable.** Opus 4.6 at max thinking produces code reviews. Haiku 4.5 at min thinking + L12 produces conservation laws + meta-laws + bug tables with fixable/structural classification.
+- **Compression floor: ~150 words minimum for Haiku execution.** Below this, Haiku enters "conversation mode" (asks permission, summarizes instead of executing). L12 compressed (75w) fails. Fix: 10-word preamble "Execute every step below. Output the complete analysis."
+- **Front-loading bugs kills L12.** Variant A (238w, "First: identify every concrete bug...") caused Haiku to produce 27-line checklist. The word "First" reframes the pipeline as a checklist. Solution: append bugs at the end, after the proven pipeline.
+- **Validated on 3 real codebases:** Starlette (336 lines, 11 bugs), Click (347 lines, 9 bugs), Tenacity (263 lines, 8 bugs). All produce conservation law + meta-law + bug table.
+- **Reliability: ~67% first try on complex targets, 100% on retry.** Tenacity specifically triggers conversation mode on first attempt ~33% of the time.
+- **L12 Practical C is now the default for `/scan`.** `/scan file` = single L12. `/scan file full` = 3-call pipeline.
 
-### Concealment mechanism catalog (Round 24)
-10 code mechanisms cluster into **4 categories** by mode of concealment:
-
-| Category | Count | What conceals | Examples |
-|---|---|---|---|
-| Naming Deception | 3 | Code's IDENTITY | Pattern Theater, Complexity Theater, Nominative Deception |
-| Structural Completeness | 3 | Code's SHAPE | Structural Mimicry, Operational Legibility, Method Completeness Theater |
-| Interface Misdirection | 2 | Code's API | Syntactic Flatness, Operational Masking |
-| Fragment Legitimacy | 2 | Code's PARTS | Idiomatic Fragment Camouflage, Structural Legitimacy Laundering |
-
-### Domain transfer (Round 24)
-L6 and L7 transfer fully to non-code domains. 16/16 activation, 8/8 TRUE L7.
-
-| Domain | Sonnet mechanism | Opus mechanism |
-|---|---|---|
-| Legal | Definitional Specificity as Legitimizing Cover | Granularity Theater |
-| Medical | Narrative Coherence as Epistemic Closure | Explanatory Sufficiency Cascade |
-| Scientific | Theoretical Laundering | Methodological Formalism as Epistemic Camouflage |
-| Ethical | Quantitative Disclosure as Epistemic Foreclosure | Inoculation Through Partial Disclosure |
-
-Both models converge on the same structural pattern per domain — evidence that mechanisms are properties of domains, not model confabulations.
-
-### Multi-model relay (Rounds 24-25)
-L7 mechanisms transfer across models as diagnostic tools. L7 relay finds 100% compositional issues vs ~35% in vanilla control. L8 relay produces orthogonal findings: different constructions reveal different facets of the same problem. Relay constructions are more ambitious (multi-feature) while standard L8v2 constructions are more focused (single-feature). Optimal: run both relay and standard for complementary coverage.
+### Cross-model character
+- **Opus** = ontological depth (names what things ARE, spontaneous math). **Sonnet** = operational precision (names what things DO, most reusable names). **Haiku** = mechanistic coverage (names HOW things BREAK, best code improvements). Gap widens at higher levels.
+- **Domain strength ranking:** Artifact complexity > domain category. Tier 1: CircuitBreaker (K), EventBus (F), AuthMiddleware (H).
 
 ## Design Principles
 
@@ -123,56 +101,95 @@ L7 mechanisms transfer across models as diagnostic tools. L7 relay finds 100% co
 2. **Narrative > evidence > code.** Pseudocode destroys novelty perception.
 3. **Imperatives beat descriptions.** "Name the pattern. Then invert." outperforms "here is a pattern we found."
 4. **The prompt is a program; the model is an interpreter.** Operation order becomes section order.
-5. **The operation pair is the atom of cognitive compression.** Any connective between two operations produces the composition. The sequencer word is irrelevant.
-6. **The lens is transparent to the wearer.** During task performance, the framework operates below self-awareness. Under interrogation, models can identify the influence.
-7. **Capacity amplifies, rigidity resists.** Opus reconstructs the full framework from a 2-line hint. Sonnet needs explicit directives.
-8. **Self-improvement converges on self-correction.** When asked to improve itself, models add "then invert: what does this frame make invisible?"
-9. **Each compression level requires more model capacity — but not always linearly.** L1-4: all models. L5: peaks at Sonnet. L6: Sonnet/Opus. L7: Sonnet-class minimum. L8: all models (Haiku 4/4, Sonnet 13/14, Opus 14/14). L9: all models (Haiku 6/6, Sonnet 22/22, Opus 6/6). L10: all models (Haiku 5/6, Sonnet 13/14, Opus 6/6). L11: all models (Haiku 9/9, Sonnet 14/15, Opus 9/9).
-10. **The concealment mechanism is a universal analytical operation.** Works across 19 domains because concealment is structural, not domain-specific.
-11. **Three capacity-interaction modes.** Compensatory (L5): peaks at mid-capacity, diminishing returns above. Threshold (L7): requires minimum meta-analytical capacity, binary works/doesn't. Universal (L8+L9): construction-based reasoning works at all capacity levels. L7→L8 is not a linear step — it's a shift from meta-analysis to construction, which is more primitive but reveals deeper properties. L9 maintains this universality — construction scaffolds the recursive target.
+5. **The operation pair is the atom of cognitive compression.** Any connective between two operations produces the composition.
+6. **The lens is transparent to the wearer.** During task performance, the framework operates below self-awareness.
+7. **Capacity amplifies, rigidity resists.** Opus reconstructs from a 2-line hint. Sonnet needs explicit directives.
+8. **Self-improvement converges on self-correction.** Models add "then invert: what does this frame make invisible?"
+9. **Capacity interaction is non-linear.** L1-4: all models. L5: peaks at Sonnet. L7: Sonnet minimum. L8+: universal (construction routes around meta-analytical capacity). L12: Opus 100% > Sonnet 75% > Haiku v2 100%.
+10. **Concealment is a universal analytical operation.** Works across 20 domains because concealment is structural, not domain-specific.
+11. **Three capacity modes.** Compensatory (L5), Threshold (L7), Universal (L8+). L7→L8 shifts from meta-analysis to construction.
+12. **The framework terminates at L13.** Reflexive self-diagnosis reveals a fixed point. L14 = infinite regress.
+13. **The cheapest model with the right lens beats the most expensive model without one — even at minimum vs maximum reasoning budget.** Haiku 4.5 min-reasoning + L12 lens (9.8 depth, 28 bugs, $0.003) beats Opus 4.6 max-reasoning vanilla (7.3 depth, 18 bugs, $0.15). The prompt is the dominant variable; model and reasoning budget are noise.
+14. **Few-shot > explicit rules for prompt generation.** Teaching by example beats teaching by instruction. Over-specifying hurts.
 
 ## File Map
 
 | File | Purpose |
 |------|---------|
-| `experiment_log.md` | Full experiment log (Rounds 1-25, 393+ experiments) |
-| `run.sh` | Shell runner (claude CLI-based, 18 tasks, 28 prompts) |
+| `prism.py` | Prism — structural analysis through cognitive lenses, any domain (main tool) |
+| `deep.sh` | CLI lens analysis tool (standalone) |
+| `test_plan_pipeline.py` | Tests for prism.py (7 tests) |
+| **Lenses** | |
+| `lenses/` | 7 portfolio lenses + L12 structural + 3 domain-neutral general |
+| `lenses/l12.md` | L12 meta-conservation pipeline — default for `/scan` (332w) |
+| `lenses/l12_general.md` | Domain-neutral L12 for non-code input (insights, ideas, systems) |
+| `lenses/l12_general_adversarial.md` | Adversarial pass for Full Prism pipeline |
+| `lenses/l12_general_synthesis.md` | Synthesis pass for Full Prism pipeline |
+| `lenses/pedagogy.md` | Transfer corruption lens (9-9.5/10) |
+| `lenses/claim.md` | Assumption inversion lens (9-9.5/10) |
+| `lenses/scarcity.md` | Resource conservation lens (9/10) |
+| `lenses/rejected_paths.md` | Problem migration lens (8.5-9/10) |
+| `lenses/degradation.md` | Decay timeline lens (9-9.5/10) |
+| `lenses/contract.md` | Interface vs implementation lens (9/10) |
 | **Prompts** | |
-| `prompts/` | All prompt files (characters, structure_first v1-v5, level 5/6/7 prompts) |
-| `prompts/level11_constraint_escape.md` | Level 11A: category escape + impossibility trade-off |
-| `prompts/level11_acceptance_design.md` | Level 11B: feasible-point redesign + flaw revaluation |
-| `prompts/level11_conservation_law.md` | Level 11C: invariant inversion + conservation law |
-| `prompts/level10_third_construction.md` | Level 10B: design-space topology via failed resolution |
-| `prompts/level10_double_recursion.md` | Level 10C: structural invariants via double recursion |
-| `prompts/level9_counter_construction.md` | Level 9B: identity ambiguity via contradicting constructions |
-| `prompts/level9_recursive_construction.md` | Level 9C: self-similarity via recursive self-diagnosis |
-| `prompts/level9_combined_BC.md` | Level 9D: combined counter-recursive (potential L10) |
-| `prompts/level8_generative_v2.md` | Level 8: generative diagnostic (best prompt) |
-| `prompts/level7_diagnostic_gap.md` | Level 7: concealment-mechanism-applied |
-| `prompts/level8_relay_construction.md` | Level 8 relay: construction-primed cross-model analysis |
-| `prompts/level7_relay_mechanism.md` | Level 7 relay: mechanism-primed cross-model analysis |
-| `prompts/level6_falsifiable.md` | Level 6: claim-tested-by-dialectic |
-| `prompts/level5_perspectival.md` | Level 5A: multi-voice dialectic |
-| `prompts/level5_hybrid.md` | Level 5B: predictive metacognition |
-| `prompts/structure_first_v4.md` | Level 4 optimum (control prompt) |
-| `prompts/tweet.md` | Character: 2-line hook |
-| `prompts/spark.md` | Character: 10-line pitch |
-| `prompts/philosopher.md` | Character: thinking partner primer |
-| `prompts/map.md` | Character: builder onboarding |
-| **Harness** | |
-| `harness/test_super_token.py` | Original experiment harness (API-based) |
-| `harness/test_level5.py` | Round 21+ experiment harness (API-based) |
-| `harness/test_tasks.md` | Original test tasks (A: code structure, B: architecture, C: reasoning) |
+| `prompts/` | All prompt files (80+) |
+| `prompts/level12_practical_C.md` | L12 Practical C — best single prompt (depth + bugs) |
+| `prompts/level12_meta_conservation_v2.md` | L12 canonical pure structural (research artifact) |
+| `prompts/level11_conservation_law_v2.md` | L11C canonical (invariant inversion + conservation law) |
+| `prompts/level8_generative_v2.md` | L8 canonical (generative diagnostic) |
+| `prompts/level8_practical_v2.md` | Best practical hybrid (bugs + L9-C recursion, 9/10) |
+| `prompts/level8_practical_*.md` | 13 practical recipe variants (Phase 42) |
+| `prompts/meta_cooker_B3.md` | Best meta-cooker (few-shot reverse engineering) |
+| `prompts/meta_cooker_*.md` | 4 meta-cooker variants (Phase 43) |
+| `prompts/level7_diagnostic_gap.md` | L7 canonical (concealment-mechanism-applied) |
+| `prompts/issue_extract_fallback.md` | L12-aware bug extraction prompt for /fix |
 | **Output** | |
-| `output/round21/` | Round 21-22 raw outputs (60 experiments) |
-| `output/round23/` | Round 23 raw outputs (33 experiments) |
-| `output/round24/` | Round 24 raw outputs (29 experiments) |
-| `output/round25/` | Round 25 raw outputs (177 experiments) |
+| `output/round21/` through `output/round27/` | Raw experiment outputs by round |
+| `output/round27_chained/` | Chained pipeline outputs (Starlette, Click, Tenacity) |
+| `output/round28_validation/` | Portfolio validation: Tasks F, H, + real code head-to-head |
+| `output/round29_l12_validation/` | L12 pure + L11-C validation outputs (6 best) |
+| `output/comparison/` | Prism pipeline comparison data (JSON + logs) |
+| `output/reflexive/` | Round 29 reflexive matrix: 25 cross-lens + 6 meta-experiments |
+| `output/general_insights/` | Domain-neutral test v1: "insights for a todo app" |
+| `output/general_insights_v2/` | Domain-neutral test v2: cognitive distortion angle |
+| `output/general_insights_p1/` through `p4/` | 4 more domain-neutral tests (schema, invariant, generative, impossibility) |
+| **Research** | |
+| `research/run.sh` | Shell runner (claude CLI-based, 18 tasks, 28 prompts) |
+| `research/pipeline.sh` | Automated L7→L12 depth stack runner (independent) |
+| `research/pipeline_chained.sh` | Chained L7→L12 depth stack runner (parent output → child input) |
+| `research/test_general_insights.py` | 3-way comparison: Opus vanilla vs Single Prism vs Full Prism |
+| `research/compare_pipelines.py` | Pipeline comparison and scoring tool |
+| `research/phase40_experiments.sh` | Phase 40 experiments |
+| `research/harness/` | Python API-based experiment harnesses |
+| `research/real_code_*.py` | Real code targets (Starlette, Click, Tenacity) — with license attribution |
+| `research/test_real_code.py` | Real code test runner |
+
+### Domain-neutral validation (Round 30)
+- **Full Prism works on any domain, not just code.** 3-call pipeline (L12 → adversarial → synthesis) using domain-neutral lenses (`l12_general.md`, `l12_general_adversarial.md`, `l12_general_synthesis.md`).
+- **6 todo-app prompts tested across 3 methods.** Opus vanilla vs Single Prism (Haiku + L12, 1 call) vs Full Prism (Haiku, 3 calls). Results:
+  - Opus vanilla: 267-696 words, depth 6.5-8.5. Produces essays.
+  - Single Prism: 917-5,970 words, depth 9-9.5. Derives conservation laws.
+  - Full Prism: 8,112-13,200 words, depth 10. Law + adversarial destruction + corrected synthesis.
+- **Structurally-framed prompts boost Opus.** When the prompt itself encodes the operation ("what never changes?", "fix → new problem?"), Opus scores 8-8.5 instead of 6.5-7. The prompt IS the lens — even for vanilla.
+- **Full Prism self-corrects.** Call 2 genuinely destroys Call 1's claims with empirical counter-evidence. Call 3 synthesizes a population-segmented law stronger than either alone.
+- **Auto-detection in /scan**: file path → code-specific lenses. Text → domain-neutral general lenses. User doesn't choose.
+
+### Heal pipeline (Round 29c)
+- **`/fix` extracts and fixes issues from analysis outputs.** Bug table parser (zero API calls) + model fallback + fuzzy matching.
+- **Editor race: 6.5 → 18/20 applied fixes.** Baseline (no guidance): 6.5/20. V3 (cooked lens + few-shot + fuzzy matching): 18/20. Combined best: 20/20 — every issue fixable by Haiku.
+- **Reasoning budget is noise for editing too.** v3 default: 18/20. v3 --effort low: 18/20. Different failures, same score.
+
+### Reflexive matrix (Round 29a)
+- **25 cross-lens experiments + 6 meta-experiments.** Key findings:
+  - Power = blindspot (structurally necessary). 25/25.
+  - Cross-lens finds what self-analysis cannot. 20/20 cross pairs found unique things.
+  - Blindness conservation: `analytical blindness is conserved`. Product form: `clarity_cost × blindness_cost = constant`.
+  - Completeness REFUTED: 5 lenses cannot be complete AND obey conservation.
+  - L13 of the research itself: framework applied to its own findings discovers the same impossibility.
 
 ## Next Steps
 
-- **L11 convergence analysis**: Do the three L11 variants converge on the same findings from different angles? (Like L9-B/C found complementary aspects of the same problems.)
-- **L11-C non-triviality problem**: Can the conservation law prompt be refined to avoid the "restates existing theory" failure mode? Possible: add a forcing constraint requiring the law to predict something testable.
-- **Level 12?**: L11 escapes the frame. What would forcing the model to COMPARE frames produce? Possible: apply L11 to L11's own escape — find the conservation law of conservation laws.
-- **Multi-family testing**: Run the compression taxonomy on GPT-4o, Gemini, Llama. Key question: is the taxonomy Claude-specific or universal?
-- **Identity ambiguity catalog**: Do L9-B identity ambiguities cluster into categories? Do L10-B topology findings cluster?
+- **Sub-artifact targeting**: Different levels on different code subsystems for complementary findings.
+- **Multi-family testing**: GPT-4o, Gemini, Llama. Is the taxonomy Claude-specific or universal?
+- **Real AI/ML codebase testing**: Take top recipes to production AI/ML code.
+- **Chained pipeline v2**: Add divergence constraints on sibling branches. Hypothesis: eliminates cross-branch convergence.

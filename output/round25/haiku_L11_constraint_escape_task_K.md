@@ -2,11 +2,9 @@
 
 ## Initial Claim: The Deepest Structural Problem
 
-**Falsifiable Claim**: This code conflates *temporal passage* with *system recovery*, treating silence (timeout elapsed) as evidence of he    -> Done (69s) -> 236 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_constraint_escape_task_K.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

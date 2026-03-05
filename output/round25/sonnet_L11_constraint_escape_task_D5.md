@@ -4,11 +4,9 @@
 
 ### The Initial Claim
 
-**Falsifiable claim:** The story performs emotional resolution while structurally enacting continued attachment in every paragraph without variation, making the technique an assertion rather than an a    -> Done (118s) -> 122 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_constraint_escape_task_D5.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

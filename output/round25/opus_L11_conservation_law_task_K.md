@@ -2,11 +2,9 @@
 
 ## The Claim (Specific, Falsifiable)
 
-> **The deepest structural problem is that the retry loop is fused inside the circuit breaker's execution path, making the circuit br    -> Done (133s) -> 205 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/opus_L11_conservation_law_task_K.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

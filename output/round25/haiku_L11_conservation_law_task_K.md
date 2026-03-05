@@ -2,11 +2,9 @@
 
 ## Falsifiable Claim (Original)
 
-**The deepest structural problem: Failure is not a unified observable.** The code counts failures in CLOSED state to answer "Is this service worki    -> Done (89s) -> 212 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_conservation_law_task_K.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

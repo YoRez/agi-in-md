@@ -2,11 +2,9 @@
 
 ## My Falsifiable Claim
 
-**"The deepest structural problem is that the code treats the authentication chain as simultaneously order-independent (claims accumulate, checkers are pure    -> Done (114s) -> 401 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_acceptance_design_task_H.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

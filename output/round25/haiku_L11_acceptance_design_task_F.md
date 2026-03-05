@@ -2,11 +2,9 @@
 
 ## Deepest Structural Problem (Initial Claim)
 
-**The EventBus conflates execution control, effect observability, and handler ordering—three adversarial concerns—but provides only     -> Done (93s) -> 385 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_acceptance_design_task_F.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

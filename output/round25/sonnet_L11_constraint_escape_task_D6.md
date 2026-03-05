@@ -4,11 +4,9 @@
 
 ## I. THE INITIAL CLAIM
 
-**Falsifiable claim:** The poem's confessional turn fails structurally because the "confession" — *"the distance I invented"* — is executed in the same repre    -> Done (140s) -> 151 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_constraint_escape_task_D6.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

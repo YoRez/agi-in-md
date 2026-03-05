@@ -6,11 +6,9 @@ This is an **eager linear pipeline**: seven transformations chained as sequentia
 
 ---
 
-### St    -> Done (140s) -> 283 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_constraint_escape_task_A.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

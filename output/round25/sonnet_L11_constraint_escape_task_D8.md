@@ -4,11 +4,9 @@
 
 ## I. The Falsifiable Claim
 
-**The brief systematically destroys the specific trust signals it claims to preserve, while the "balance" framing makes the destruction look like a trade-o    -> Done (134s) -> 148 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_constraint_escape_task_D8.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

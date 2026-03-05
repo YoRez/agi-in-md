@@ -2,11 +2,9 @@
 
 ## The Claim
 
-**The deepest structural problem:** The `context` dict serves simultaneously as the transport between middleware stages (pipeline semantics: shared, transformative), the dispatch payload to ha    -> Done (164s) -> 325 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/opus_L11_acceptance_design_task_F.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

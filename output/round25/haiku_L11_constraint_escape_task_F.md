@@ -2,11 +2,9 @@
 
 ## Initial Falsifiable Claim
 
-**The code's deepest structural problem: it conflates three orthogonal concerns—*deployment verification*, *execution safety*, and *operational recovery*—into a single dead-lett    -> Done (76s) -> 240 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_constraint_escape_task_F.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

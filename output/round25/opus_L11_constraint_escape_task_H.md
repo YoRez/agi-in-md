@@ -2,11 +2,9 @@
 
 ## The Claim
 
-**The deepest structural problem: authentication (identity) and authorization (permissions) are fused into a single sequential chain sharing a mutable context dict, making it impo    -> Done (157s) -> 350 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/opus_L11_constraint_escape_task_H.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

@@ -4,11 +4,9 @@
 
 ## The Primary Claim
 
-**Falsifiable claim**: The composition's deepest structural problem is that its subject never actually transforms — it returns at m. 97 *exactly* as stated at m. 1, whi    -> Done (153s) -> 135 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_conservation_law_task_D7.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

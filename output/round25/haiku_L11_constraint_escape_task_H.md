@@ -2,11 +2,9 @@
 
 ## The Core Claim (Falsifiable)
 
-**The deepest structural problem: The code conflates two incompatible notions. It treats identity as something the middleware *establishes* (an output of     -> Done (98s) -> 288 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/haiku_L11_constraint_escape_task_H.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

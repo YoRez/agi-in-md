@@ -2,11 +2,9 @@
 
 ## The Falsifiable Claim
 
-**The deepest structural problem is that a single mutable `dict` (`context`) serves simultaneously as message, control-flow signal, error record, and result accumulator, creat    -> Done (105s) -> 176 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/opus_L11_constraint_escape_task_F.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

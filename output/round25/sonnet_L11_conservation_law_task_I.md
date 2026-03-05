@@ -4,11 +4,9 @@
 
 ## I. THE CLAIM
 
-**Falsifiable claim:** This machine's deepest structural problem is that *callback utility and transition atomicity are mutually exclusive* within its protocol. Any callback powerful    -> Done (202s) -> 384 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_conservation_law_task_I.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

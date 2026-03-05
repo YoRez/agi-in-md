@@ -2,11 +2,9 @@
 
 ## Initial Claim (Specific, Falsifiable)
 
-> **The deepest structural problem is that `emit` routes all handlers through a single mutable `context` dict, making it impossible to reason     -> Done (111s) -> 168 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/opus_L11_conservation_law_task_F.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

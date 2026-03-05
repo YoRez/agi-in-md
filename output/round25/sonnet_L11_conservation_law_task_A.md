@@ -6,11 +6,9 @@ This is a **linear sequential pipeline** — each step consumes the previous ste
 
 ## The Diagnostic
 
-### Fa    -> Done (129s) -> 181 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_conservation_law_task_A.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

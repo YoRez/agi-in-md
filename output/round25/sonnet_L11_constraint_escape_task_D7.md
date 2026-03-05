@@ -4,11 +4,9 @@
 
 ## I. The Falsifiable Claim
 
-**The composition's deepest structural problem is this:** The piece deploys fugal devices as *legitimacy signals* rather than as a *generative process*. Each fugal g    -> Done (211s) -> 188 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_constraint_escape_task_D7.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

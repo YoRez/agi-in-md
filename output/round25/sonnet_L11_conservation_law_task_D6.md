@@ -4,11 +4,9 @@
 
 ## I. The Initial Claim
 
-**Specific, falsifiable claim:** The poem's deepest structural problem is that its confessional turn — *"cartographers do not make the land / I have measured    -> Done (108s) -> 119 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_conservation_law_task_D6.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

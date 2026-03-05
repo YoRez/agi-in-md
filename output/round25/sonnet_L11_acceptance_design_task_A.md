@@ -2,11 +2,9 @@
 
 ### Surface Pattern
 
-This is a **linear data pipeline** — Unix pipe semantics translated to Python. Each variable receives a transformation of the previous one. It's readable, traceable, and obviously correct at a g    -> Done (122s) -> 214 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_acceptance_design_task_A.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

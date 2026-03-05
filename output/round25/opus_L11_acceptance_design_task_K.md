@@ -2,11 +2,9 @@
 
 ## The Falsifiable Claim
 
-**The retry mechanism nested inside the circuit breaker creates a structural lie: the circuit breaker's state machine operates on a fiction of single-attempt outc    -> Done (134s) -> 247 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/opus_L11_acceptance_design_task_K.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:

@@ -4,11 +4,9 @@
 
 ## I. THE FALSIFIABLE CLAIM
 
-**The deepest structural problem:** This piece is architecturally a ternary form (ABA') with fugal devices applied as surface ornamentation. Every structural decisio    -> Done (373s) -> 187 lines -> /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/sonnet_L11_acceptance_design_task_D7.md
 
 ========================================
  Completed 1 experiments
- Results in: /d/OneDrive - CosmoHac/Project/agi-in-md/output/round25/
 ========================================
 
  Examples:
