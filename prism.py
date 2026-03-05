@@ -37,7 +37,7 @@ except Exception:
 
 # ── Constants & ANSI ─────────────────────────────────────────────────────────
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 SESSIONS_DIR = pathlib.Path.home() / ".prism_sessions"
 SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
 LENS_DIR = SCRIPT_DIR / "lenses"

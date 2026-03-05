@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for prism.py v0.7 — plan, display, JSON parsing, backward compat."""
+"""Tests for prism.py v0.8 — plan, display, JSON parsing, backward compat."""
 
 import json
 import pathlib
@@ -815,7 +815,7 @@ def test_cmd_scan_dispatch():
 
 
 if __name__ == "__main__":
-    print("\nRunning prism v0.7 tests...\n")
+    print("\nRunning prism v0.8 tests...\n")
     test_parse_stage_json()
     test_enriched_plan_format()
     test_autopilot_enriched_lookup()
