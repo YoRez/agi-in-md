@@ -62,15 +62,48 @@ The boundary between "does nothing" and "activates a cognitive operation" is sha
 
 ```bash
 python prism.py
-> /scan myfile.py                           # L12 structural analysis (1 Haiku call)
-> /scan myfile.py full                      # Full Prism: L12 → adversarial → synthesis (3 calls)
-> /scan myfile.py expand                    # Auto-generate domain lenses, run all, synthesize
-> /scan myfile.py target="race conditions"  # Goal-directed: cook a lens for your question
-> /scan "your question here" full           # Works on any topic, not just code
-> /cook legal-contracts                     # Pre-generate lenses for a domain
-> /lenses                                   # List all available lenses
-> /prism pedagogy                           # Set active lens for chat mode
-> /fix                                      # Auto-fix issues from analysis
+
+# ── Single Prism (1 call) & Full Prism (3 calls) ──
+> /scan auth.py                             # L12 structural analysis (~$0.003)
+> /scan auth.py full                        # L12 → adversarial → synthesis
+
+# ── Discover → Expand (explore areas, then go deep) ──
+> /scan auth.py discover                    # Cook area lenses, show numbered list
+> /scan auth.py discover full               # Multi-pass discover (cooked pipeline, deeper)
+> /scan auth.py expand                      # Pick areas interactively, single/full per area
+> /scan auth.py expand 1,3 single           # Areas 1,3 as single prism
+> /scan auth.py expand 2-4 full             # Areas 2-4 as full prism
+> /scan auth.py expand * single             # All areas as single prism
+
+# ── Direct targeting (you know what you want) ──
+> /scan auth.py target="race conditions"    # Cook goal-specific lens + run
+> /scan auth.py target=2                    # Run 2nd discover lens (already cooked)
+> /scan auth.py deep="error handling"       # Cook 3-lens pipeline + run all 3
+> /scan auth.py deep=1                      # Same, using 1st discover area
+
+# ── Fix loop ──
+> /scan auth.py fix                         # Scan → fix → re-scan (interactive)
+> /scan auth.py fix auto                    # Scan → fix → re-scan (automatic)
+
+# ── Works on anything ──
+> /scan "your question here" full           # Text input → domain-neutral lenses
+> /scan src/                                # Directory → project-level analysis
+> /scan src/ discover                       # Project-level area discovery
+
+# ── Lens management ──
+> /cook legal-contracts                     # Generate domain-specific lenses
+> /lenses                                   # List all lenses (built-in + cooked)
+
+# ── Chat with dynamic lenses ──
+> /prism single                             # Each message gets a freshly cooked lens
+> /prism full                               # Each message gets a cooked pipeline
+> /prism pedagogy                           # Static lens for all messages
+> /prism off                                # Vanilla chat (default)
+
+# ── Fix issues ──
+> /fix                                      # Pick issues from last scan
+> /fix auth.py deep                         # Full prism scan first, then fix
+> /fix auto                                 # Fix all open issues automatically
 ```
 
 See [Try it](#try-it) for full usage including standalone CLI (no Prism needed).
@@ -338,31 +371,57 @@ If you have [Claude Code](https://docs.anthropic.com/en/docs/claude-code) instal
 # Start Prism
 python prism.py
 
-# L12 structural analysis (1 Haiku call)
-> /scan myfile.py
+# ── Single Prism — L12 structural analysis (1 Haiku call, ~$0.003) ──
+> /scan auth.py
 
-# Full Prism — L12 → adversarial → synthesis (3 Haiku calls)
-> /scan myfile.py full
+# ── Full Prism — L12 → adversarial → synthesis (3 calls) ──
+> /scan auth.py full
 
-# Discover angles you didn't know to ask about — auto-cooks domain lenses
-> /scan myfile.py expand
+# ── Discover → Expand workflow ──
+# Step 1: discover areas (cooker generates domain-specific lenses)
+> /scan auth.py discover
 
-# Goal-directed — "I specifically want to know about X"
-> /scan myfile.py target="error handling edge cases"
+# Step 1 (deeper): multi-pass discover with cooked pipeline
+> /scan auth.py discover full
 
-# Analyze anything — auto-detects text vs file
+# Step 2: expand — pick areas, choose single or full prism per area
+> /scan auth.py expand                      # interactive: pick areas + mode
+> /scan auth.py expand 1,3 single           # areas 1,3 as single prism
+> /scan auth.py expand 2-4 full             # areas 2-4 as full prism
+> /scan auth.py expand * single             # all areas as single prism
+
+# ── Direct targeting — you already know what to investigate ──
+> /scan auth.py target="race conditions"    # cook goal-specific lens + run
+> /scan auth.py target=2                    # run 2nd discover lens
+> /scan auth.py deep="error handling"       # cook 3-lens pipeline + run all 3
+> /scan auth.py deep=1                      # same, using 1st discover area
+
+# ── Fix loop — scan → fix → re-scan until clean ──
+> /scan auth.py fix                         # interactive: review each fix
+> /scan auth.py fix auto                    # automatic: apply all, re-scan
+
+# ── Works on any input ──
 > /scan "What are the structural trade-offs in microservice architecture?" full
+> /scan src/                                # directory → project-level analysis
+> /scan src/ discover                       # project-level area discovery
 
-# Pre-generate lenses for a domain, then use them
-> /cook legal-contracts
-> /scan contract.pdf expand
+# ── Lens generation ──
+> /cook legal-contracts                     # generate domain-specific lenses
+> /scan contract.pdf discover               # use them
 
-# Set a lens for interactive chat
-> /prism pedagogy
+# ── Chat with dynamic lenses (each message gets fresh lenses) ──
+> /prism single                             # cook 1 lens per message
+> /prism full                               # cook pipeline per message
 > what are the hidden assumptions in this authentication flow?
 
-# Fix issues found by analysis
-> /fix
+# ── Or use a static lens for all messages ──
+> /prism pedagogy
+> what does this code teach its maintainers?
+
+# ── Fix issues found by analysis ──
+> /fix                                      # pick from last scan
+> /fix auth.py deep                         # full prism scan first, then fix
+> /fix auto                                 # fix all open issues, up to 3 passes
 ```
 
 ### With Claude CLI directly (no Prism needed)
@@ -432,7 +491,7 @@ bash research/run.sh sonnet all all  # 18 tasks × 28 prompts = 504 experiments
 ## Project structure
 
 ```
-prism.py                 Prism — structural analysis through cognitive lenses (main tool)
+prism.py                 Prism — structural analysis through cognitive lenses (main tool, 20 tests)
 deep.sh                  CLI lens analysis tool (standalone)
 
 lenses/                  7 lens prompts + 3 domain-neutral + L12 variants

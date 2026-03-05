@@ -123,32 +123,138 @@ COOK_PROMPT = (
     "(2) force construction of alternatives, (3) name a law or invariant, "
     "(4) end with a testable prediction. Each lens is 50-80 words, imperative form.\n\n"
     "DOMAIN: {domain}\n\n"
-    "Generate 3-5 NEW analytical lenses for this domain. Each must exploit a DIFFERENT "
+    "Generate NEW analytical lenses for this domain. Each must exploit a DIFFERENT "
     "analytical angle. Output ONLY a JSON array:\n"
-    '[{{"name": "snake_case_name", "prompt": "the lens text (50-80 words, imperative, '
-    'ends with named law or prediction)"}}, ...]'
+    '[{{"name": "snake_case_name", "prompt": "the lens text"}}, ...]'
 )
 
 # Variant for target= mode: generates ONE focused lens for a specific goal.
 COOK_TARGET_PROMPT = (
     "You generate a focused analytical lens for a specific goal.\n\n"
-    "An analytical lens is a 50-80 word imperative prompt that forces structured "
-    "discovery. Great lenses: (1) chain operations, (2) force construction of "
-    "alternatives, (3) name a law or invariant, (4) end with a testable prediction.\n\n"
-    "Examples of great lenses:\n"
-    '- "Identify every explicit choice this artifact makes. For each, name the '
+    "An analytical lens is a system prompt given to an AI analyzing an artifact. "
+    "Study these scored examples:\n\n"
+    'SCORED 9.5/10: "Identify every explicit choice this artifact makes. For each, name the '
     "alternative it invisibly rejects. Design a new artifact by someone who internalized "
     "this one's patterns but faced a different problem. Trace which transferred patterns "
     'create silent problems. Name the pedagogy law."\n'
-    '- "Extract every empirical claim this artifact embeds. For each, assume it is false. '
+    'SCORED 9/10: "Extract every empirical claim this artifact embeds. For each, assume it is false. '
     "Trace the corruption. Build three alternatives, each inverting one claim. "
     'Predict which false claim causes the slowest, most invisible failure."\n\n'
     "USER GOAL: {goal}\n\n"
-    "Generate ONE analytical lens (50-80 words, imperative form) laser-focused on this "
-    "goal. The lens must force construction, not just listing. Output ONLY a JSON object:\n"
+    "Generate ONE analytical lens laser-focused on this goal. "
+    "Output ONLY a JSON object:\n"
     '{{"name": "snake_case_name", "prompt": "the lens text"}}'
 )
 
+# Variant for deep= mode: generates THREE complementary lenses (primary + adversarial + synthesis)
+# for a specific area. The three lenses form a full pipeline that can be run sequentially.
+COOK_DEEP_PROMPT = (
+    "You generate a 3-lens analytical system for deep investigation of a specific area.\n\n"
+    "An analytical lens is a system prompt given to an AI analyzing an artifact. "
+    "Study these scored examples:\n\n"
+    'SCORED 9.5/10: "Identify every explicit choice. Name the alternative each invisibly rejects. '
+    "Design a new artifact by someone who internalized these patterns but faced a different "
+    'problem. Trace which transferred patterns create silent problems. Name the pedagogy law."\n'
+    'SCORED 9/10: "Extract every empirical claim about timing, causality, resources, or behavior. '
+    "Assume each is false. Trace the corruption. Build three alternatives inverting one claim each. "
+    'Predict which false claim causes the slowest, most invisible failure."\n\n'
+    "The three lenses form a pipeline:\n"
+    "- PRIMARY: structural analysis — find what the area conceals\n"
+    "- ADVERSARIAL: receive the primary analysis, try to break it\n"
+    "- SYNTHESIS: receive both, resolve contradictions, produce a corrected finding\n\n"
+    "AREA TO INVESTIGATE: {goal}\n\n"
+    "Generate THREE lenses forming a coherent pipeline for this area. "
+    "Output ONLY a JSON array:\n"
+    '[{{"name": "snake_case", "prompt": "lens text", "role": "primary"}}, '
+    '{{"name": "snake_case", "prompt": "lens text", "role": "adversarial"}}, '
+    '{{"name": "snake_case", "prompt": "lens text", "role": "synthesis"}}]'
+)
+
+# Full Prism cooker for expand mode: generates an ordered pipeline of lenses.
+# Does NOT constrain count or roles — the cooker decides the structure.
+COOK_FULL_PRISM_PROMPT = (
+    "You generate a multi-pass analytical system for deep investigation of a specific area.\n\n"
+    "An analytical lens is a system prompt given to an AI analyzing an artifact. "
+    "Study these scored examples:\n\n"
+    'SCORED 9.5/10: "Identify every explicit choice. Name the alternative each invisibly rejects. '
+    "Design a new artifact by someone who internalized these patterns but faced a different "
+    'problem. Trace which transferred patterns create silent problems. Name the pedagogy law."\n'
+    'SCORED 9/10: "Extract every empirical claim about timing, causality, resources, or behavior. '
+    "Assume each is false. Trace the corruption. Build three alternatives inverting one claim each. "
+    'Predict which false claim causes the slowest, most invisible failure."\n\n'
+    "The lenses form an ordered pipeline. The first lens analyzes the raw artifact. "
+    "Each subsequent lens receives the artifact PLUS all previous analyses. "
+    "Later lenses should challenge, deepen, or synthesize earlier findings.\n\n"
+    "AREA TO INVESTIGATE: {area}\n\n"
+    "Generate lenses forming a coherent pipeline for this area. "
+    "Output ONLY a JSON array:\n"
+    '[{{"name": "snake_case", "prompt": "lens text", "role": "descriptive_role"}}, ...]'
+)
+
+
+# Full Prism cooker for discover: generates a multi-pass discovery pipeline.
+# First pass discovers areas. Subsequent passes find what the first missed.
+COOK_DISCOVER_FULL_PROMPT = (
+    "You generate a multi-pass discovery system that finds all structural areas "
+    "worth investigating in an artifact.\n\n"
+    "An analytical lens is a system prompt given to an AI. "
+    "Study these scored examples:\n\n"
+    'SCORED 9.5/10: "Identify every explicit choice. Name the alternative each invisibly rejects. '
+    "Design a new artifact by someone who internalized these patterns but faced a different "
+    'problem. Trace which transferred patterns create silent problems. Name the pedagogy law."\n'
+    'SCORED 9/10: "Extract every empirical claim about timing, causality, resources, or behavior. '
+    "Assume each is false. Trace the corruption. Build three alternatives inverting one claim each. "
+    'Predict which false claim causes the slowest, most invisible failure."\n\n'
+    "The passes form an ordered pipeline. The first pass discovers areas from the raw artifact. "
+    "Each subsequent pass receives the artifact PLUS all previous discovery outputs. "
+    "Later passes should find what earlier passes missed — blind spots, "
+    "hidden dependencies, structural properties that only become visible through contradiction.\n\n"
+    "DOMAIN: {domain}\n\n"
+    "Generate passes forming a coherent discovery pipeline. "
+    "Output ONLY a JSON array:\n"
+    '[{{"name": "snake_case", "prompt": "pass instructions", "role": "descriptive_role"}}, ...]'
+)
+
+# Chat cooker: generates ONE optimal lens for responding to a user's message.
+COOK_CHAT_SINGLE_PROMPT = (
+    "You generate an optimal analytical lens for responding to a user's message.\n\n"
+    "An analytical lens is a system prompt given to an AI before it responds. "
+    "Study these scored examples:\n\n"
+    'SCORED 9.5/10: "Identify every explicit choice this artifact makes. For each, name the '
+    "alternative it invisibly rejects. Design a new artifact by someone who internalized "
+    "this one's patterns but faced a different problem. Trace which transferred patterns "
+    'create silent problems. Name the pedagogy law."\n'
+    'SCORED 9/10: "Extract every empirical claim this artifact embeds. For each, assume it is false. '
+    "Trace the corruption. Build three alternatives, each inverting one claim. "
+    'Predict which false claim causes the slowest, most invisible failure."\n\n'
+    "The lens should make the AI think more deeply about this specific message — "
+    "find hidden assumptions, structural properties, non-obvious implications. "
+    "The lens shapes HOW the AI thinks, not WHAT it says.\n\n"
+    "USER MESSAGE:\n{message}\n\n"
+    "Generate ONE lens optimized for responding to this message. "
+    "Output ONLY a JSON object:\n"
+    '{{"name": "snake_case", "prompt": "the lens text"}}'
+)
+
+# Chat cooker: generates a multi-pass response pipeline for a user's message.
+COOK_CHAT_FULL_PROMPT = (
+    "You generate a multi-pass response pipeline for a user's message.\n\n"
+    "An analytical lens is a system prompt given to an AI. "
+    "Study these scored examples:\n\n"
+    'SCORED 9.5/10: "Identify every explicit choice. Name the alternative each invisibly rejects. '
+    "Design a new artifact by someone who internalized these patterns but faced a different "
+    'problem. Trace which transferred patterns create silent problems. Name the pedagogy law."\n'
+    'SCORED 9/10: "Extract every empirical claim about timing, causality, resources, or behavior. '
+    "Assume each is false. Trace the corruption. Build three alternatives inverting one claim each. "
+    'Predict which false claim causes the slowest, most invisible failure."\n\n'
+    "The lenses form an ordered pipeline. The first lens generates a deep response. "
+    "Each subsequent lens receives the message PLUS all previous responses. "
+    "Later lenses should challenge, deepen, or synthesize earlier responses.\n\n"
+    "USER MESSAGE:\n{message}\n\n"
+    "Generate lenses forming a coherent response pipeline for this message. "
+    "Output ONLY a JSON array:\n"
+    '[{{"name": "snake_case", "prompt": "lens text", "role": "descriptive_role"}}, ...]'
+)
 
 SYSTEM_PROMPT_FALLBACK = (
     "You are a structural analyst. For any input — code, ideas, designs, systems, "
@@ -520,7 +626,8 @@ class PrismREPL:
         self._interrupted = False
         self._auto_mode = False
         self._last_action = None  # ("scan", {"issues": [...]}) | ("deep", {"file": ...}) | ...
-        self._chat_mode = "single"  # "single" (1 call) or "full" (3 calls: response → adversarial → synthesis)
+        self._discover_results = []  # cached discover lens list for target=N / deep=N
+        self._chat_mode = "off"  # "off" (vanilla), "single" (dynamic cook per msg), "full" (dynamic pipeline per msg)
         self._active_lens_name = None   # e.g. "pedagogy" or "readme/promise_credibility"
         self._active_lens_prompt = None # loaded lens text, used in system prompt
         self.system_prompt = self._load_system_prompt()
@@ -575,6 +682,8 @@ class PrismREPL:
             self.queued_files.clear()
             if self._chat_mode == "full":
                 self._chat_full_pipeline(message)
+            elif self._chat_mode == "single":
+                self._chat_single_prism(message)
             else:
                 self._send_and_stream(message)
 
@@ -582,106 +691,128 @@ class PrismREPL:
 
     # ── Full-mode chat pipeline ──────────────────────────────────────────────
 
-    def _chat_full_pipeline(self, message):
-        """3-call pipeline for chat: response → adversarial → synthesis.
+    def _chat_single_prism(self, message):
+        """Dynamic single prism: cook 1 lens per message, then respond.
 
-        Call 1: normal chat response (uses enriched system prompt if available).
-        Call 2: adversarial lens challenges the response.
-        Call 3: synthesis lens resolves the two.
+        1. Cook an optimal lens for this specific message
+        2. Use it as system prompt for the response
         """
-        # Call 1: normal response
+        # Cook lens for this message
+        print(f"  {C.DIM}cooking lens...{C.RESET}", end="",
+              flush=True)
+        raw = self._call_model(
+            COOK_CHAT_SINGLE_PROMPT.format(
+                message=message[:2000]),
+            message[:2000], timeout=60)
+        parsed = self._parse_stage_json(raw, "cook_chat_single")
+
+        if isinstance(parsed, dict) and parsed.get("prompt"):
+            lens_prompt = parsed["prompt"]
+            name = parsed.get("name", "dynamic")
+            sys.stdout.write(
+                f"\r  {C.DIM}lens: {name}{C.RESET}"
+                + " " * 20 + "\n")
+        else:
+            # Fallback: use base system prompt
+            sys.stdout.write(
+                f"\r  {C.DIM}(using default lens){C.RESET}"
+                + " " * 20 + "\n")
+            lens_prompt = None
+
         print(f"{C.BOLD}{C.BLUE}── Response ──{C.RESET}")
-        response = self._chat_full_call(message, system_prompt=None)
-        if not response or self._interrupted:
-            return
+        self._chat_full_call(message, system_prompt=lens_prompt)
 
-        # Call 2: adversarial challenge
-        adv_prompt = self._load_lens("l12_general_adversarial")
-        if not adv_prompt:
-            return
-        adv_input = (
-            f"# USER REQUEST\n\n{message}\n\n---\n\n"
-            f"# RESPONSE (from previous pass)\n\n{response}"
-        )
-        print(f"\n{C.BOLD}{C.BLUE}── Adversarial challenge ──{C.RESET}")
-        adv_response = self._chat_full_call(adv_input, system_prompt=adv_prompt)
-        if not adv_response or self._interrupted:
-            return
+    def _chat_full_pipeline(self, message):
+        """Dynamic full prism: cook pipeline per message, then run chained.
 
-        # Call 3: synthesis
-        synth_prompt = self._load_lens("l12_general_synthesis")
-        if not synth_prompt:
-            return
-        synth_input = (
-            f"# USER REQUEST\n\n{message}\n\n---\n\n"
-            f"# ANALYSIS 1: RESPONSE\n\n{response}\n\n---\n\n"
-            f"# ANALYSIS 2: ADVERSARIAL CHALLENGE\n\n{adv_response}"
-        )
-        print(f"\n{C.BOLD}{C.BLUE}── Synthesis ──{C.RESET}")
-        self._chat_full_call(synth_input, system_prompt=synth_prompt)
+        1. Cook a multi-pass pipeline for this specific message
+        2. Run each lens in sequence, chaining outputs
+        3. Return synthesized response
+        """
+        # Cook pipeline for this message
+        print(f"  {C.DIM}cooking pipeline...{C.RESET}", end="",
+              flush=True)
+        raw = self._call_model(
+            COOK_CHAT_FULL_PROMPT.format(
+                message=message[:2000]),
+            message[:2000], timeout=90)
+        parsed = self._parse_stage_json(raw, "cook_chat_full")
+
+        if isinstance(parsed, list) and len(parsed) >= 2:
+            lenses = []
+            for item in parsed:
+                text = item.get("prompt", "")
+                role = item.get("role", item.get("name", "pass"))
+                if text:
+                    lenses.append({"prompt": text, "role": role})
+            roles = ", ".join(l["role"] for l in lenses)
+            sys.stdout.write(
+                f"\r  {C.DIM}pipeline: {roles}{C.RESET}"
+                + " " * 20 + "\n")
+        else:
+            # Fallback: hardcoded adversarial + synthesis
+            sys.stdout.write(
+                f"\r  {C.DIM}(using default pipeline){C.RESET}"
+                + " " * 20 + "\n")
+            adv_prompt = self._load_lens(
+                "l12_general_adversarial") or ""
+            synth_prompt = self._load_lens(
+                "l12_general_synthesis") or ""
+            lenses = [
+                {"prompt": "", "role": "response"},
+                {"prompt": adv_prompt, "role": "adversarial"},
+                {"prompt": synth_prompt, "role": "synthesis"},
+            ]
+
+        # Run pipeline
+        outputs = []
+        for i, lens in enumerate(lenses):
+            role = lens["role"]
+
+            if i == 0:
+                msg = message
+                prompt = lens["prompt"] or None
+            else:
+                parts = [f"# USER REQUEST\n\n{message}"]
+                for j, prev in enumerate(outputs):
+                    prev_role = lenses[j]["role"].upper()
+                    parts.append(
+                        f"# PASS {j + 1}: {prev_role}"
+                        f"\n\n{prev}")
+                msg = "\n\n---\n\n".join(parts)
+                prompt = lens["prompt"]
+
+            print(f"\n{C.BOLD}{C.BLUE}── {role} ──{C.RESET}")
+            output = self._chat_full_call(
+                msg, system_prompt=prompt)
+
+            if output and not self._interrupted:
+                outputs.append(output)
+            if not output or self._interrupted:
+                break
 
     def _chat_full_call(self, message, system_prompt=None):
-        """Single streaming call for the chat full pipeline. Returns captured output."""
+        """Single streaming call for the chat pipeline. Returns captured output."""
         active_prompt = system_prompt
         if active_prompt is None:
-            # Use enriched system prompt if available, otherwise base
-            active_prompt = getattr(self, '_enriched_system_prompt', None)
+            active_prompt = getattr(
+                self, '_enriched_system_prompt', None)
             if active_prompt:
                 self._enriched_system_prompt = None
             else:
                 active_prompt = self.system_prompt
-        # Prepend active lens if set via /prism <lens>
         if self._active_lens_prompt and system_prompt is None:
-            active_prompt = self._active_lens_prompt + "\n\n" + active_prompt
+            active_prompt = (self._active_lens_prompt
+                             + "\n\n" + active_prompt)
 
         backend = ClaudeBackend(
             model=self.session.model,
             working_dir=str(self.working_dir),
-            session_id=None,  # independent calls, no session continuity
+            session_id=None,
             system_prompt=active_prompt,
             tools=False,
         )
-        parser = StreamParser()
-        self._interrupted = False
-        output_buffer = []
-        thinking_shown = False
-
-        original_sigint = signal.getsignal(signal.SIGINT)
-        def on_interrupt(sig, frame):
-            self._interrupted = True
-            backend.kill()
-        signal.signal(signal.SIGINT, on_interrupt)
-
-        try:
-            for line in backend.send(message):
-                if self._interrupted:
-                    break
-                for evt, data in parser.parse_line(line):
-                    if evt == "text":
-                        if thinking_shown:
-                            sys.stdout.write("\r" + " " * 30 + "\r")
-                            thinking_shown = False
-                        sys.stdout.write(data)
-                        sys.stdout.flush()
-                        output_buffer.append(data)
-                    elif evt == "thinking":
-                        if not thinking_shown:
-                            sys.stdout.write(f"{C.DIM}thinking...{C.RESET}")
-                            sys.stdout.flush()
-                            thinking_shown = True
-                    elif evt == "result":
-                        usage = data.get("usage", {})
-                        self.session.total_input_tokens += usage.get("input_tokens", 0)
-                        self.session.total_output_tokens += usage.get("output_tokens", 0)
-                        cost = data.get("total_cost_usd", data.get("cost_usd", 0))
-                        if isinstance(cost, (int, float)):
-                            self.session.total_cost_usd += cost
-        finally:
-            signal.signal(signal.SIGINT, original_sigint)
-
-        if output_buffer:
-            print()
-        return "".join(output_buffer)
+        return self._stream_and_capture(backend, message)
 
     # ── Non-interactive review mode ───────────────────────────────────────────
 
@@ -809,23 +940,23 @@ class PrismREPL:
     def _register_builtin_commands(self):
         """Populate the command registry with all built-in slash commands."""
         cmds = {
-            "/exit":      {"handler": self._cmd_exit,      "help": "Quit",                              "args": "",                           "category": "session"},
-            "/help":      {"handler": self._cmd_help,      "help": "Show this help",                    "args": "",                           "category": "session"},
-            "/clear":     {"handler": self._cmd_clear,     "help": "Reset session",                     "args": "",                           "category": "session"},
-            "/model":     {"handler": self._cmd_model,     "help": "Switch model",                      "args": "haiku|sonnet|opus",           "category": "session"},
-            "/prism":     {"handler": self._cmd_mode,      "help": "Set depth or active lens for chat", "args": "[single|full|<lens>|off]", "category": "session"},
+            "/exit":      {"handler": self._cmd_exit,       "help": "Exit Prism",                                        "args": "",                                              "category": "session"},
+            "/help":      {"handler": self._cmd_help,       "help": "Show all commands with examples",                   "args": "",                                              "category": "session"},
+            "/clear":     {"handler": self._cmd_clear,      "help": "Reset session, clear discover cache and queued files", "args": "",                                           "category": "session"},
+            "/model":     {"handler": self._cmd_model,      "help": "Switch Claude model for all operations",            "args": "haiku|sonnet|opus",                             "category": "session"},
+            "/prism":     {"handler": self._cmd_mode,       "help": "Chat mode: off (vanilla), single/full (dynamic lenses), or static lens", "args": "[off|single|full|<lens>]", "category": "session"},
 
-            "/compact":   {"handler": self._cmd_compact,   "help": "Trim context (experimental)",       "args": "",                           "category": "session"},
-            "/cost":      {"handler": self._cmd_cost,      "help": "Show token usage (experimental)",   "args": "",                           "category": "session"},
-            "/save":      {"handler": self._cmd_save,      "help": "Save session (experimental)",       "args": "<name>",                     "category": "session"},
-            "/load":      {"handler": self._cmd_load,      "help": "Resume session (experimental)",     "args": "[name]",                     "category": "session"},
-            "/scan":     {"handler": self._cmd_scan,      "help": "Structural analysis (L12)", "args": "<file> [full|expand|target=\"...\"]", "category": "analysis"},
-            "/cook":     {"handler": self._cmd_cook,      "help": "Generate domain-specific lenses",  "args": "<domain> [sample-file]", "category": "analysis"},
-            "/lenses":   {"handler": self._cmd_lenses,    "help": "List all available lenses",         "args": "",                       "category": "info"},
+            "/compact":   {"handler": self._cmd_compact,    "help": "Trim conversation context to reduce token usage",   "args": "",                                              "category": "session"},
+            "/cost":      {"handler": self._cmd_cost,       "help": "Show turns, tokens in/out, and USD cost",           "args": "",                                              "category": "session"},
+            "/save":      {"handler": self._cmd_save,       "help": "Save current session to a named file for later",    "args": "<name>",                                        "category": "session"},
+            "/load":      {"handler": self._cmd_load,       "help": "Resume a saved session (no arg = list all)",        "args": "[name]",                                        "category": "session"},
+            "/scan":      {"handler": self._cmd_scan,       "help": "Structural analysis via cognitive lenses",          "args": "<file|dir|text> [mode]",                        "category": "analysis"},
+            "/cook":      {"handler": self._cmd_cook,       "help": "Generate domain-specific lenses via meta-cooker",   "args": "<domain> [sample-file]",                        "category": "analysis"},
+            "/lenses":    {"handler": self._cmd_lenses,     "help": "List all lenses: built-in, cooked, and local",      "args": "",                                              "category": "info"},
 
-            "/fix":      {"handler": self._cmd_heal,      "help": "Fix issues from scan results",    "args": "[file] [deep] [auto]",   "category": "fix"},
-            "/status":    {"handler": self._cmd_status,    "help": ".deep/ dashboard: scan age, issues, skills", "args": "",                 "category": "info"},
-            "/reload":    {"handler": self._cmd_reload_cmd, "help": "Apply changes to lenses/config without restarting", "args": "",      "category": "session"},
+            "/fix":       {"handler": self._cmd_heal,       "help": "Extract issues from scan → apply fixes with diff review", "args": "[file] [deep] [auto]",                    "category": "fix"},
+            "/status":    {"handler": self._cmd_status,     "help": "Dashboard: last scan age, open issues, cooked skills", "args": "",                                            "category": "info"},
+            "/reload":    {"handler": self._cmd_reload_cmd, "help": "Hot-reload prism.py + lenses without restarting",   "args": "",                                              "category": "session"},
         }
         self._commands.update(cmds)
 
@@ -846,6 +977,7 @@ class PrismREPL:
         self.session = Session(model=model)
         self.queued_files.clear()
         self._last_action = None
+        self._discover_results = []
         print(f"{C.YELLOW}Session cleared{C.RESET}")
 
     def _cmd_model(self, arg):
@@ -857,42 +989,59 @@ class PrismREPL:
             print(f"{C.YELLOW}Usage: /model haiku|sonnet|opus{C.RESET}")
 
     def _cmd_mode(self, arg):
-        """Switch prism depth or set active lens for chat.
+        """Switch chat prism mode or set a static lens.
 
-        /prism             — show current mode + active lens
-        /prism single|full — switch pipeline depth
-        /prism <lens>      — set active lens for chat (e.g. pedagogy, readme/credibility)
-        /prism off         — disable active lens
+        /prism             — show current mode
+        /prism off         — vanilla chat (no lenses)
+        /prism single      — dynamic single prism (cook lens per message)
+        /prism full        — dynamic full prism (cook pipeline per message)
+        /prism <lens>      — static lens for all messages (e.g. pedagogy)
         """
         if not arg:
-            # Show current state
-            depth = "1 call" if self._chat_mode == "single" else "3 calls"
-            lens = self._active_lens_name or "none"
-            print(f"{C.CYAN}Prism: {self._chat_mode} ({depth}), "
-                  f"lens={lens}{C.RESET}")
+            if self._chat_mode == "off":
+                lens = self._active_lens_name or "none"
+                print(f"{C.CYAN}Prism: off (vanilla), "
+                      f"lens={lens}{C.RESET}")
+            elif self._chat_mode == "single":
+                print(f"{C.CYAN}Prism: single "
+                      f"(dynamic lens per message){C.RESET}")
+            elif self._chat_mode == "full":
+                print(f"{C.CYAN}Prism: full "
+                      f"(dynamic pipeline per message){C.RESET}")
             return
 
-        if arg in ("single", "full"):
-            self._chat_mode = arg
-            label = "1 call" if arg == "single" else "3 calls: response → adversarial → synthesis"
-            print(f"{C.CYAN}Prism: {arg} ({label}){C.RESET}")
-        elif arg == "off":
+        if arg == "off":
+            self._chat_mode = "off"
             self._active_lens_name = None
             self._active_lens_prompt = None
-            print(f"{C.CYAN}Lens: off (vanilla chat){C.RESET}")
+            print(f"{C.CYAN}Prism: off (vanilla){C.RESET}")
+        elif arg == "single":
+            self._chat_mode = "single"
+            self._active_lens_name = None
+            self._active_lens_prompt = None
+            print(f"{C.CYAN}Prism: single "
+                  f"(cook lens per message){C.RESET}")
+        elif arg == "full":
+            self._chat_mode = "full"
+            self._active_lens_name = None
+            self._active_lens_prompt = None
+            print(f"{C.CYAN}Prism: full "
+                  f"(cook pipeline per message){C.RESET}")
         else:
-            # Try to load as a lens name
+            # Static lens mode
             prompt = self._load_lens(arg)
             if prompt:
+                self._chat_mode = "off"
                 self._active_lens_name = arg
                 self._active_lens_prompt = prompt
-                preview = prompt[:60] + ("..." if len(prompt) > 60 else "")
+                preview = prompt[:60] + (
+                    "..." if len(prompt) > 60 else "")
                 print(f"{C.CYAN}Lens: {arg}{C.RESET}")
                 print(f"  {C.DIM}{preview}{C.RESET}")
             else:
-                print(f"{C.YELLOW}Unknown lens: {arg}{C.RESET}")
-                print(f"  {C.DIM}Use /lenses to see available lenses{C.RESET}")
-                print(f"  {C.DIM}/prism single|full to change depth{C.RESET}")
+                print(f"{C.YELLOW}Unknown: {arg}{C.RESET}")
+                print(f"  {C.DIM}/prism off|single|full "
+                      f"or /lenses{C.RESET}")
 
     def _cmd_compact(self, arg):
         """Compact context."""
@@ -975,35 +1124,66 @@ class PrismREPL:
                 visible_left = f"  {name}" + (f" {args}" if args else "")
                 pad = max(1, 38 - len(visible_left))
                 print(f"{left}{' ' * pad}{help_text}")
-            # Extra detail lines
+            # Extra detail lines per category
             if cat_key == "analysis":
-                print(f"\n  {C.DIM}Scan modes:{C.RESET}")
-                print(f"  {C.DIM}  /scan file.py                  L12 structural analysis (1 Haiku call, ~$0.003){C.RESET}")
-                print(f"  {C.DIM}  /scan file.py full             full prism: L12 → adversarial → synthesis (3 calls){C.RESET}")
-                print(f"  {C.DIM}  /scan file.py expand           discover angles: auto-cook domain lenses,{C.RESET}")
-                print(f"  {C.DIM}                                 run all in parallel, synthesize across findings{C.RESET}")
-                print(f'  {C.DIM}  /scan file.py target="..."     goal-directed: cook a lens for your specific{C.RESET}')
-                print(f"  {C.DIM}                                 question, then run it (cached for reuse){C.RESET}")
-                print(f"  {C.DIM}  /scan \"any text\" full          works on any topic, not just code{C.RESET}")
-                print(f"\n  {C.DIM}Lens management:{C.RESET}")
-                print(f"  {C.DIM}  /cook <domain>                 pre-generate lenses for a domain (e.g. /cook legal){C.RESET}")
-                print(f"  {C.DIM}  /cook <domain> <sample-file>   generate lenses informed by a sample artifact{C.RESET}")
-                print(f"  {C.DIM}  /lenses                        list all available lenses (built-in + cooked){C.RESET}")
-                print(f"  {C.DIM}  /prism <lens>                  set active lens for chat (e.g. /prism pedagogy){C.RESET}")
-                print(f"  {C.DIM}  /prism off                     disable lens, return to vanilla chat{C.RESET}")
+                print(f"\n  {C.DIM}Single Prism — 1 call, L12 structural analysis (~$0.003):{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py                      conservation law + meta-law + bug table{C.RESET}")
+                print(f"  {C.DIM}  /scan \"how should a todo app        works on any text, not just code files{C.RESET}")
+                print(f"  {C.DIM}         handle shared state?\"{C.RESET}")
+
+                print(f"\n  {C.DIM}Full Prism — 3 calls: L12 → adversarial → synthesis:{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py full                  overclaims destroyed, corrected synthesis{C.RESET}")
+
+                print(f"\n  {C.DIM}Discover → Expand — explore areas, then go deep on the ones you pick:{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py discover              cook area lenses, show numbered list{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py discover full         multi-pass discover (cooked pipeline, deeper){C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py expand                pick areas interactively, single/full each{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py expand 1,3 single     areas 1,3 as single prism{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py expand 2-4 full       areas 2-4 as full prism{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py expand * single       all discovered areas as single prism{C.RESET}")
+
+                print(f"\n  {C.DIM}Direct targeting — you already know what area to investigate:{C.RESET}")
+                print(f'  {C.DIM}  /scan auth.py target="race conds"   cook goal-specific lens + run it{C.RESET}')
+                print(f"  {C.DIM}  /scan auth.py target=2              run 2nd discover lens (already cooked){C.RESET}")
+                print(f'  {C.DIM}  /scan auth.py deep="error handling" cook 3-lens pipeline for area + run all 3{C.RESET}')
+                print(f"  {C.DIM}  /scan auth.py deep=1                same, using 1st discover area as goal{C.RESET}")
+
+                print(f"\n  {C.DIM}Fix loop — scan → fix → re-scan until clean:{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py fix                   interactive: review each fix before applying{C.RESET}")
+                print(f"  {C.DIM}  /scan auth.py fix auto              automatic: apply all, re-scan to verify{C.RESET}")
+
+                print(f"\n  {C.DIM}Project-level — works on directories:{C.RESET}")
+                print(f"  {C.DIM}  /scan src/                          L12 on every code file in directory{C.RESET}")
+                print(f"  {C.DIM}  /scan src/ discover                 project-level area discovery (compact map){C.RESET}")
+                print(f"  {C.DIM}  /scan src/ expand                   project-level expand with area selection{C.RESET}")
+
+                print(f"\n  {C.DIM}Lens generation — create domain-specific lenses:{C.RESET}")
+                print(f"  {C.DIM}  /cook legal                         generate lenses for legal documents{C.RESET}")
+                print(f"  {C.DIM}  /cook api-design spec.yaml          lenses informed by a sample artifact{C.RESET}")
+                print(f"  {C.DIM}  /lenses                             list all lenses (built-in + cooked + local){C.RESET}")
+
             if cat_key == "fix":
-                print(f"\n  {C.DIM}Fix modes:{C.RESET}")
-                print(f"  {C.DIM}  /fix                          pick issues interactively from last scan{C.RESET}")
-                print(f"  {C.DIM}  /fix file.py                  fix that file (auto-scans if no results){C.RESET}")
-                print(f"  {C.DIM}  /fix file.py deep             full prism scan (3 calls), then fix{C.RESET}")
-                print(f"  {C.DIM}  /fix auto                     fix all open issues, up to 3 passes{C.RESET}")
+                print(f"\n  {C.DIM}Examples:{C.RESET}")
+                print(f"  {C.DIM}  /fix                                pick issues interactively from last scan{C.RESET}")
+                print(f"  {C.DIM}  /fix auth.py                        fix that file (auto-scans if no results){C.RESET}")
+                print(f"  {C.DIM}  /fix auth.py deep                   full prism scan (3 calls) first, then fix{C.RESET}")
+                print(f"  {C.DIM}  /fix auto                           fix all open issues, up to 3 passes{C.RESET}")
+
+            if cat_key == "session":
+                print(f"\n  {C.DIM}Chat prism modes — /prism controls how chat responses are enhanced:{C.RESET}")
+                print(f"  {C.DIM}  /prism off                          vanilla chat, no lenses (default){C.RESET}")
+                print(f"  {C.DIM}  /prism single                       each message gets a freshly cooked lens{C.RESET}")
+                print(f"  {C.DIM}  /prism full                         each message gets a cooked multi-lens pipeline{C.RESET}")
+                print(f"  {C.DIM}  /prism pedagogy                     static lens: all messages use pedagogy{C.RESET}")
+                print(f"  {C.DIM}  /prism legal/contract_analysis      static lens from a cooked domain{C.RESET}")
+                print(f"  {C.DIM}  /prism                              show current mode{C.RESET}")
 
             print()
 
         print(f"{C.BOLD}Shortcuts:{C.RESET}")
         print(f"  After /scan, type a {C.CYAN}number{C.RESET} (e.g. {C.CYAN}3{C.RESET}) to fix that issue directly.")
         print(f"  Type {C.CYAN}status{C.RESET} anytime (no slash needed) for .deep/ dashboard.")
-        print(f"  Just type a question — Prism is also a chat (active lens shapes responses).")
+        print(f"  Just type anything — Prism is a chat. Use /prism to control lens mode.")
         print()
 
     def _load_system_prompt(self):
@@ -1591,7 +1771,7 @@ class PrismREPL:
         if lenses:
             print(f"\n{C.GREEN}Cooked {len(lenses)} lenses → "
                   f"lenses/{domain}/{C.RESET}")
-            print(f"  {C.DIM}Use: /scan <input> expand  or  "
+            print(f"  {C.DIM}Use: /scan <input> discover  or  "
                   f"/prism {domain}/<name>{C.RESET}")
 
     def _cook_lenses(self, domain, sample_content=None):
@@ -1782,46 +1962,130 @@ class PrismREPL:
             return "\n\n".join(parts), ", ".join(names)
         return None, None
 
-    def _cmd_scan(self, arg):
-        """/scan <file|text> [full|expand|target="..."]
+    @staticmethod
+    def _parse_scan_args(arg):
+        """Parse /scan arguments into structured dict.
 
-        /scan myfile.py              — L12 single (1 call)
-        /scan myfile.py full         — Full Prism (3 calls: L12 → adversarial → synthesis)
-        /scan myfile.py expand       — auto-cook domain lenses + run all + synthesize
-        /scan myfile.py target="X"   — cook a goal-specific lens + run it
-        /scan "a todo app" full      — works on text too (domain-neutral)
+        Returns {"mode", "arg", "target_goal", "deep_goal",
+                 "fix_auto", "expand_indices"}.
+        Modes: single, full, discover, expand, target, deep, fix.
+        """
+        result = {"mode": "single", "arg": arg, "target_goal": None,
+                  "deep_goal": None, "fix_auto": False,
+                  "expand_indices": None, "expand_mode": None}
+        if not arg:
+            return result
+
+        # 1. Check for deep="..." or deep=N
+        deep_match = (
+            re.search(r'deep\s*=\s*"(.+?)"', arg) or
+            re.search(r"deep\s*=\s*'(.+?)'", arg) or
+            re.search(r'deep\s*=\s*(\d+)', arg)
+        )
+        if deep_match:
+            val = deep_match.group(1)
+            result["mode"] = "deep"
+            result["deep_goal"] = int(val) if val.isdigit() else val
+            result["arg"] = arg[:deep_match.start()].strip()
+            return result
+
+        # 2. Check for target="..." or target=N
+        target_match = (
+            re.search(r'target\s*=\s*"(.+?)"', arg) or
+            re.search(r"target\s*=\s*'(.+?)'", arg) or
+            re.search(r'target\s*=\s*(\d+)', arg)
+        )
+        if target_match:
+            val = target_match.group(1)
+            result["mode"] = "target"
+            result["target_goal"] = int(val) if val.isdigit() else val
+            result["arg"] = arg[:target_match.start()].strip()
+            return result
+
+        # 3. Check for expand with optional indices + prism mode
+        #    expand | expand single | expand full | expand 1,3,5 full
+        expand_match = re.search(r'\bexpand\b\s*(.*?)\s*$', arg)
+        if expand_match:
+            result["mode"] = "expand"
+            tail = expand_match.group(1).strip()
+            if re.search(r'\bfull\b', tail):
+                result["expand_mode"] = "full"
+            elif re.search(r'\bsingle\b', tail):
+                result["expand_mode"] = "single"
+            idx_str = re.sub(r'\b(single|full)\b', '', tail).strip()
+            result["expand_indices"] = idx_str if idx_str else None
+            result["arg"] = arg[:expand_match.start()].strip() or None
+            return result
+
+        # 4. Check for discover full
+        disc_full = re.search(r'\bdiscover\s+full\s*$', arg)
+        if disc_full:
+            result["mode"] = "discover_full"
+            result["arg"] = arg[:disc_full.start()].strip() or None
+            return result
+
+        # 5. Trailing keywords
+        parts = arg.rsplit(maxsplit=2)
+        if (len(parts) >= 3 and parts[-2] == "fix"
+                and parts[-1] == "auto"):
+            result["mode"] = "fix"
+            result["fix_auto"] = True
+            result["arg"] = " ".join(parts[:-2])
+        elif len(parts) >= 2 and parts[-1] == "fix":
+            result["mode"] = "fix"
+            result["arg"] = " ".join(parts[:-1])
+        elif len(parts) >= 2 and parts[-1] in (
+                "full", "discover"):
+            result["mode"] = parts[-1]
+            result["arg"] = " ".join(parts[:-1])
+        elif len(parts) == 1 and parts[0] in (
+                "full", "discover"):
+            result["mode"] = parts[0]
+            result["arg"] = None
+
+        return result
+
+    def _cmd_scan(self, arg):
+        """/scan <file|text|dir> [mode]
+
+        Single & Full Prism:
+          /scan file.py                  — Single Prism (1 L12 call)
+          /scan file.py full             — Full Prism (3 calls: L12 → adv → synth)
+
+        Discover & Expand:
+          /scan file.py discover         — Single Prism discover (cook areas, list)
+          /scan file.py discover full    — Full Prism discover (multi-pass, deeper)
+          /scan file.py expand           — pick areas → single/full per area
+          /scan file.py expand 1,3 single — areas 1,3 as single prism
+          /scan file.py expand 1,3 full  — areas 1,3 as full prism
+
+        Targeted:
+          /scan file.py target="X"       — cook goal-specific lens + run
+          /scan file.py target=N         — run Nth discover lens
+          /scan file.py deep="X"         — cook 3-lens system + run pipeline
+          /scan file.py deep=N           — same, Nth discover area
+
+        Fix loop:
+          /scan file.py fix              — scan → fix → re-scan (interactive)
+          /scan file.py fix auto         — same, automatic
+
+        Project-level:
+          /scan src/                     — L12 batch (all files)
+          /scan src/ discover            — project-level area discovery
+          /scan src/ expand              — project-level expand
         """
         if not arg:
             print(f"{C.YELLOW}Usage: /scan <file|text> "
-                  f"[full|expand|target=\"...\"]  {C.RESET}")
+                  f"[full|discover|deep=\"...\"|target=\"...\"]  {C.RESET}")
             return
 
-        # Parse mode flags from the end of arg
-        mode = "single"  # single | full | expand | target
-        target_goal = None
-
-        # Check for target="..." anywhere in arg (match same closing quote)
-        target_match = (
-            re.search(r'target\s*=\s*"(.+?)"', arg) or
-            re.search(r"target\s*=\s*'(.+?)'", arg)
-        )
-        if target_match:
-            target_goal = target_match.group(1)
-            mode = "target"
-            arg = arg[:target_match.start()].strip()
-        else:
-            # Check for trailing mode keyword
-            parts = arg.rsplit(maxsplit=1)
-            if len(parts) == 2 and parts[-1] in ("full", "expand"):
-                mode = parts[-1]
-                arg = parts[0]
-            elif len(parts) == 1 and parts[0] in ("full", "expand"):
-                mode = parts[0]
-                arg = None
+        parsed = self._parse_scan_args(arg)
+        mode = parsed["mode"]
+        arg = parsed["arg"]
 
         if not arg:
             print(f"{C.YELLOW}Usage: /scan <file|text> "
-                  f"[full|expand|target=\"...\"]  {C.RESET}")
+                  f"[full|discover|deep=\"...\"|target=\"...\"]  {C.RESET}")
             return
 
         input_arg = arg
@@ -1829,6 +2093,28 @@ class PrismREPL:
         # Try as directory
         resolved = self._resolve_file(input_arg)
         if resolved and resolved.is_dir():
+            if mode in ("discover", "discover_full", "expand"):
+                # Project-level discover/expand
+                project_map = self._build_project_map(resolved)
+                if not project_map:
+                    print(f"{C.RED}No code files found in "
+                          f"{resolved}{C.RESET}")
+                    return
+                dir_name = resolved.name or str(resolved)
+                if mode == "discover":
+                    self._run_discover(
+                        project_map, dir_name, general=True)
+                elif mode == "discover_full":
+                    self._run_discover_full(
+                        project_map, dir_name, general=True)
+                else:
+                    self._run_expand(
+                        project_map, dir_name,
+                        indices_str=parsed["expand_indices"],
+                        expand_mode=parsed["expand_mode"],
+                        general=True)
+                return
+            # Default: L12 batch scan
             self._scan_directory(str(resolved))
             return
 
@@ -1843,12 +2129,33 @@ class PrismREPL:
 
         general = not is_file
 
-        if mode == "full":
+        if mode == "fix":
+            if not is_file:
+                print(f"{C.YELLOW}Fix mode requires a file path{C.RESET}")
+                return
+            self._scan_fix_loop(content, name, auto=parsed["fix_auto"])
+            return
+        elif mode == "full":
             self._run_full_pipeline(content, name, general=general)
+        elif mode == "discover":
+            self._run_discover(content, name, general=general)
+        elif mode == "discover_full":
+            self._run_discover_full(content, name, general=general)
         elif mode == "expand":
-            self._run_expand(content, name, general=general)
+            self._run_expand(content, name,
+                             indices_str=parsed["expand_indices"],
+                             expand_mode=parsed["expand_mode"],
+                             general=general)
+        elif mode == "deep":
+            self._run_deep(content, name, parsed["deep_goal"],
+                           general=general)
         elif mode == "target":
-            self._run_target(content, name, target_goal, general=general)
+            goal = parsed["target_goal"]
+            if isinstance(goal, int):
+                self._run_target_by_index(content, name, goal,
+                                          general=general)
+            else:
+                self._run_target(content, name, goal, general=general)
         else:
             # Single L12
             lens = "l12" if is_file else "l12_general"
@@ -1860,6 +2167,204 @@ class PrismREPL:
 
         if is_file:
             self._suggest_next("scan", {"file": name})
+
+    def _scan_fix_loop(self, content, name, auto=False):
+        """Closed-loop: scan → extract context → fix → re-scan → done.
+
+        Runs up to 3 iterations. Stops when no new issues found or
+        no fixes approved in a pass.
+        """
+        deep_dir = self.working_dir / ".deep"
+        max_iterations = 3
+        prev_issues = []
+
+        for iteration in range(1, max_iterations + 1):
+            # ── Phase 1: Scan (re-read file on iterations > 1) ──
+            if iteration > 1:
+                fresh_content, _ = self._get_deep_content(name)
+                if fresh_content:
+                    content = fresh_content
+                print(f"\n  {C.BOLD}{C.CYAN}── Re-scan (iteration "
+                      f"{iteration}/{max_iterations}) ──{C.RESET}\n")
+
+            print(f"{C.CYAN}L12 structural analysis{C.RESET}")
+            scan_output = self._run_single_lens_streaming(
+                "l12", content, name)
+
+            if not scan_output:
+                print(f"{C.YELLOW}Scan produced no output{C.RESET}")
+                break
+
+            # ── Phase 2: Extract structural context ──
+            structural_context = self._extract_structural_context(
+                scan_output)
+            if structural_context:
+                print(f"  {C.DIM}Structural context extracted "
+                      f"({len(structural_context)} chars){C.RESET}")
+
+            # ── Phase 3: Extract issues ──
+            issues_path = deep_dir / "issues.json"
+            if issues_path.exists():
+                issues_path.unlink()
+
+            print(f"  {C.DIM}Extracting issues from findings...{C.RESET}")
+            issues = self._heal_extract_from_reports(deep_dir)
+
+            if not issues:
+                print(f"{C.GREEN}No issues found.{C.RESET}")
+                break
+
+            # On re-scan, only fix genuinely new issues
+            if iteration > 1:
+                issues = self._diff_issues(prev_issues, issues)
+                if not issues:
+                    print(f"  {C.GREEN}No new issues — loop "
+                          f"complete.{C.RESET}")
+                    break
+                print(f"  {C.DIM}{len(issues)} new issue(s) "
+                      f"to fix{C.RESET}")
+
+            self._heal_save_issues(deep_dir, issues)
+            prev_issues.extend(issues)
+
+            # ── Phase 4: Fix each issue with structural context ──
+            open_issues = [i for i in issues
+                           if i.get("status") != "fixed"]
+            if not open_issues:
+                print(f"  {C.GREEN}All issues already fixed!{C.RESET}")
+                break
+
+            print(f"\n  {C.BOLD}{C.CYAN}FIX{C.RESET}  "
+                  f"{len(open_issues)} issue(s)"
+                  f"{' (auto)' if auto else ''}\n")
+
+            if auto:
+                self._auto_mode = True
+
+            approved_count = 0
+            for idx, issue in enumerate(open_issues, 1):
+                title = issue.get("title", "untitled")
+                print(f"  {C.BOLD}{C.CYAN}── Issue {idx}/"
+                      f"{len(open_issues)}: {title} ──{C.RESET}")
+
+                attempts = 0
+                instructions = ""
+                while attempts < 2:
+                    attempts += 1
+                    fix_issue = dict(issue)
+                    if instructions:
+                        fix_issue["action"] = (
+                            f"{issue.get('action', '')} "
+                            f"User instructions: {instructions}")
+
+                    result, snapshots = self._heal_fix_one(
+                        fix_issue,
+                        structural_context=structural_context)
+
+                    if result == "approved":
+                        approved_count += 1
+                        _t = self._resolve_file(
+                            fix_issue.get("file", ""))
+                        pre_fix = (snapshots.get(str(_t))
+                                   if _t else None)
+                        verdict = self._heal_verify(
+                            issue, pre_fix_snapshot=pre_fix)
+                        issue["status"] = verdict
+                        break
+                    elif result == "rejected":
+                        break
+                    elif result == "instructed":
+                        if auto:
+                            break
+                        try:
+                            instructions = input(
+                                f"  {C.GREEN}Instructions:"
+                                f"{C.RESET} ").strip()
+                        except (EOFError, KeyboardInterrupt):
+                            print()
+                            break
+                        if not instructions:
+                            break
+                        print(f"  {C.DIM}Retrying with "
+                              f"instructions...{C.RESET}")
+                print()
+
+            self._heal_save_issues(deep_dir, issues)
+            self._auto_mode = False
+
+            # Termination: no fixes approved → stop
+            if approved_count == 0:
+                print(f"  {C.DIM}No fixes approved — stopping "
+                      f"loop.{C.RESET}")
+                break
+
+            # Last iteration — don't re-scan
+            if iteration == max_iterations:
+                print(f"  {C.DIM}Max iterations reached "
+                      f"({max_iterations}).{C.RESET}")
+                break
+
+            # Ask whether to re-scan (interactive only)
+            if not auto:
+                try:
+                    cont = input(
+                        f"  {C.GREEN}Re-scan to verify? "
+                        f"(y/n):{C.RESET} ").strip().lower()
+                except (EOFError, KeyboardInterrupt):
+                    print()
+                    break
+                if cont not in ("y", "yes"):
+                    break
+
+        # Final summary
+        self._suggest_next("scan", {"file": name})
+
+    def _build_project_map(self, dir_path):
+        """Build a compact project summary for project-level discover.
+
+        Returns a string with: file tree + first 5 lines of each file
+        (signatures, imports, class names). Keeps it under ~4000 chars
+        so the cooker can reason about the whole project cheaply.
+        """
+        files = self._collect_files(str(dir_path))
+        if not files:
+            return ""
+
+        parts = [f"# Project: {dir_path.name}\n",
+                 f"{len(files)} files\n\n## File tree\n"]
+
+        # File tree with sizes
+        for f in files:
+            try:
+                rel = f.relative_to(dir_path)
+            except ValueError:
+                rel = f.name
+            size = f.stat().st_size
+            parts.append(f"  {rel} ({size} bytes)")
+
+        # Sample: first 5 lines of each file (imports, class defs)
+        parts.append("\n\n## File signatures\n")
+        budget = 3000
+        for f in files:
+            if budget <= 0:
+                parts.append(f"\n... ({len(files)} files total)")
+                break
+            try:
+                rel = f.relative_to(dir_path)
+            except ValueError:
+                rel = f.name
+            try:
+                lines = f.read_text(
+                    encoding="utf-8", errors="replace"
+                ).splitlines()[:5]
+                snippet = "\n".join(lines)
+                entry = f"\n### {rel}\n```\n{snippet}\n```\n"
+                parts.append(entry)
+                budget -= len(entry)
+            except Exception:
+                pass
+
+        return "\n".join(parts)
 
     def _scan_directory(self, target):
         """Scan all code files in a directory with L12, save findings."""
@@ -1949,78 +2454,733 @@ class PrismREPL:
         self._save_deep_finding(file_name, "full", combined)
         print(f"\n  {C.DIM}Use /fix to pick issues, or /fix auto to fix all{C.RESET}")
 
-    def _run_expand(self, content, file_name, general=False):
-        """Expand mode: auto-cook domain lenses + run all + synthesize.
+    @staticmethod
+    def _parse_selection(selection_str, max_val):
+        """Parse '1,3,5-7' or '*' into sorted list of 1-based ints."""
+        if not selection_str or selection_str.strip() == '*':
+            return list(range(1, max_val + 1))
+        indices = set()
+        for part in selection_str.split(','):
+            part = part.strip()
+            if '-' in part:
+                try:
+                    start, end = part.split('-', 1)
+                    for i in range(int(start), int(end) + 1):
+                        if 1 <= i <= max_val:
+                            indices.add(i)
+                except ValueError:
+                    pass
+            else:
+                try:
+                    i = int(part)
+                    if 1 <= i <= max_val:
+                        indices.add(i)
+                except ValueError:
+                    pass
+        return sorted(indices)
+
+    def _load_cached_pipeline(self, cache_dir):
+        """Load cached pipeline lenses from a directory.
+
+        Files named NN_name.md (e.g. 00_primary.md) are loaded in order.
+        Returns list of {name, prompt, role, order} dicts, or None.
+        """
+        if not cache_dir.is_dir():
+            return None
+        files = sorted(cache_dir.glob("*.md"))
+        if len(files) < 2:
+            return None
+        lenses = []
+        for f in files:
+            text = f.read_text(encoding="utf-8")
+            name = f.stem.split("_", 1)[1] if "_" in f.stem else f.stem
+            lenses.append({"name": name, "prompt": text,
+                           "role": name, "order": len(lenses)})
+        return lenses
+
+    def _run_discover(self, content, file_name, general=False):
+        """Discover mode: cook area lenses, show numbered list, stop.
 
         1. Detect/infer domain from content
         2. Cook lenses if none cached (B3 meta-cooker)
-        3. Run all domain lenses on the input
-        4. Synthesize across all outputs
+        3. Display numbered list with previews
+        4. Save to self._discover_results + .deep/discover.json
         """
-        # Infer domain from content
         domain = self._infer_domain(content, file_name, general)
-        print(f"{C.CYAN}Expand: domain='{domain}'{C.RESET}")
+        print(f"{C.CYAN}Discover: domain='{domain}'{C.RESET}")
 
         # Check for cached lenses
         lens_names = self._list_domain_lenses(domain)
         if not lens_names:
-            # Cook new lenses
             sample = content[:3000] if len(content) > 3000 else content
             results = self._cook_lenses(domain, sample)
             if not results:
-                print(f"{C.RED}Could not generate lenses for '{domain}'{C.RESET}")
+                print(f"{C.RED}Could not generate lenses for "
+                      f"'{domain}'{C.RESET}")
                 return
             lens_names = [name for name, _ in results]
         else:
             print(f"{C.DIM}Using {len(lens_names)} cached lenses from "
                   f"lenses/{domain}/{C.RESET}")
 
-        # Run each lens
-        outputs = {}
+        # Build discover results with lens text previews
+        discover = []
         for lens_name in lens_names:
             full_name = f"{domain}/{lens_name}"
-            result = self._run_single_lens_streaming(
-                full_name, content, file_name,
-                label=f"{lens_name} ── {file_name}")
-            if result and not self._interrupted:
-                outputs[lens_name] = result
+            text = self._load_lens(full_name) or ""
+            discover.append({
+                "name": lens_name,
+                "lens_path": full_name,
+                "preview": text[:80] + ("..." if len(text) > 80 else ""),
+                "domain": domain,
+            })
+
+        self._discover_results = discover
+        self._save_discover_results(discover, file_name)
+
+        # Display numbered list
+        print(f"\n{C.BOLD}Discovered {len(discover)} angles:{C.RESET}\n")
+        for i, item in enumerate(discover, 1):
+            print(f"  {C.CYAN}{i}.{C.RESET} {C.GREEN}{item['name']}{C.RESET}")
+            print(f"     {C.DIM}{item['preview']}{C.RESET}")
+
+        print(f"\n  {C.DIM}expand             pick areas, choose "
+              f"single/full per area{C.RESET}")
+        print(f"  {C.DIM}expand 1,3 single  run areas 1,3 "
+              f"as single prism{C.RESET}")
+        print(f"  {C.DIM}expand 1,3 full    run areas 1,3 "
+              f"as full prism{C.RESET}")
+        print(f"  {C.DIM}discover full      deeper discover "
+              f"(multi-pass){C.RESET}")
+
+    def _run_discover_full(self, content, file_name, general=False):
+        """Full prism discover: multi-pass area discovery.
+
+        1. Cook a discover pipeline (cooker decides structure)
+        2. Run each pass, chaining outputs
+        3. Parse final output for area lenses
+        4. Save and display as normal discover results
+
+        The cooker generates multiple discovery passes — e.g.
+        initial discovery, blind spot check, synthesis — producing
+        a more thorough set of areas than single discover.
+        """
+        domain = self._infer_domain(content, file_name, general)
+        sample = content[:3000] if len(content) > 3000 else content
+
+        print(f"{C.CYAN}Discover Full Prism: "
+              f"domain='{domain}'{C.RESET}")
+
+        # Step 1: Cook the discover pipeline
+        prompt = COOK_DISCOVER_FULL_PROMPT.format(domain=domain)
+        user_input = (
+            f"Generate a multi-pass discovery pipeline "
+            f"for: {domain}\n\n"
+            f"Sample artifact:\n\n{sample}")
+
+        print(f"  {C.CYAN}Cooking discover pipeline...{C.RESET}")
+        raw = self._call_model(prompt, user_input, timeout=90)
+
+        parsed = self._parse_stage_json(raw, "cook_discover_full")
+        if not isinstance(parsed, list) or len(parsed) < 2:
+            print(f"{C.RED}Failed to cook discover pipeline"
+                  f"{C.RESET}")
+            return
+
+        # Step 2: Run the pipeline
+        lenses = []
+        for i, item in enumerate(parsed):
+            name = item.get("name", f"pass_{i + 1}")
+            name = re.sub(r'[^a-z0-9_]', '_', name.lower())
+            text = item.get("prompt", "")
+            role = item.get("role", f"pass_{i + 1}")
+            if not text:
+                continue
+            lenses.append({"name": name, "prompt": text,
+                           "role": role})
+            preview = text[:60] + (
+                "..." if len(text) > 60 else "")
+            print(f"    {C.GREEN}{role}{C.RESET} ({name}): "
+                  f"{C.DIM}{preview}{C.RESET}")
+
+        if len(lenses) < 2:
+            print(f"{C.RED}Need at least 2 passes{C.RESET}")
+            return
+
+        outputs = []
+        for i, lens in enumerate(lenses):
+            role = lens.get("role", lens["name"])
+            if i == 0:
+                msg = (f"Discover all structural areas worth "
+                       f"investigating.\n\n{sample}")
+            else:
+                parts = [f"# ARTIFACT\n\n{sample}"]
+                for j, prev in enumerate(outputs):
+                    prev_role = lenses[j].get(
+                        "role", lenses[j]["name"]).upper()
+                    parts.append(
+                        f"# PASS {j + 1}: {prev_role}"
+                        f"\n\n{prev}")
+                msg = "\n\n---\n\n".join(parts)
+
+            print(f"\n{C.BOLD}{C.BLUE}── Discover {role} ── "
+                  f"{file_name} ──{C.RESET}")
+            backend = ClaudeBackend(
+                model=self.session.model,
+                working_dir=str(self.working_dir),
+                system_prompt=lens["prompt"],
+                tools=False,
+            )
+            output = self._stream_and_capture(backend, msg)
+
+            if output and not self._interrupted:
+                outputs.append(output)
+            if not output or self._interrupted:
+                break
+
+        if not outputs:
+            return
+
+        # Step 3: Extract area lenses from final output
+        # Use the regular cooker on the synthesized discovery
+        final_context = outputs[-1]
+        print(f"\n  {C.CYAN}Extracting area lenses from "
+              f"discovery...{C.RESET}")
+        cook_prompt = COOK_PROMPT.format(domain=domain)
+        cook_input = (
+            f"Generate analytical lenses for: {domain}\n\n"
+            f"Deep discovery analysis:\n\n{final_context}\n\n"
+            f"Sample artifact:\n\n{sample}")
+
+        raw_lenses = self._call_model(
+            cook_prompt, cook_input, timeout=90)
+        lens_parsed = self._parse_stage_json(
+            raw_lenses, "cook_discover_full_lenses")
+        if not isinstance(lens_parsed, list):
+            print(f"{C.RED}Failed to extract lenses{C.RESET}")
+            return
+
+        # Save lenses and build discover results
+        lens_dir = (self.working_dir / ".deep" / "lenses"
+                    / domain)
+        lens_dir.mkdir(parents=True, exist_ok=True)
+
+        discover = []
+        for item in lens_parsed:
+            lname = item.get("name", "").strip()
+            ltext = item.get("prompt", "").strip()
+            if not lname or not ltext:
+                continue
+            lname = re.sub(r'[^a-z0-9_]', '_', lname.lower())
+            (lens_dir / f"{lname}.md").write_text(
+                ltext, encoding="utf-8")
+            full_name = f"{domain}/{lname}"
+            discover.append({
+                "name": lname,
+                "lens_path": full_name,
+                "preview": ltext[:80] + (
+                    "..." if len(ltext) > 80 else ""),
+                "domain": domain,
+            })
+
+        self._discover_results = discover
+        self._save_discover_results(discover, file_name)
+
+        print(f"\n{C.BOLD}Discovered {len(discover)} "
+              f"angles (full prism):{C.RESET}\n")
+        for i, item in enumerate(discover, 1):
+            print(f"  {C.CYAN}{i}.{C.RESET} "
+                  f"{C.GREEN}{item['name']}{C.RESET}")
+            print(f"     {C.DIM}{item['preview']}{C.RESET}")
+
+        print(f"\n  {C.DIM}expand             pick areas, choose "
+              f"single/full per area{C.RESET}")
+        print(f"  {C.DIM}expand 1,3 single  run areas as "
+              f"single prism{C.RESET}")
+        print(f"  {C.DIM}expand 1,3 full    run areas as "
+              f"full prism{C.RESET}")
+
+    def _save_discover_results(self, results, file_name=None):
+        """Persist discover results to .deep/discover_{stem}.json."""
+        deep_dir = self.working_dir / ".deep"
+        deep_dir.mkdir(parents=True, exist_ok=True)
+        stem = pathlib.Path(file_name).stem if file_name else "last"
+        path = deep_dir / f"discover_{stem}.json"
+        path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+
+    def _load_discover_results(self, file_name=None):
+        """Load discover results from memory or .deep/discover_{stem}.json."""
+        if self._discover_results:
+            return self._discover_results
+        stem = pathlib.Path(file_name).stem if file_name else "last"
+        path = self.working_dir / ".deep" / f"discover_{stem}.json"
+        if path.exists():
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                if isinstance(data, list):
+                    self._discover_results = data
+                    return data
+            except (json.JSONDecodeError, OSError):
+                pass
+        return []
+
+    def _run_target_by_index(self, content, file_name, index, general=False):
+        """Run Nth discover lens (1-based index)."""
+        results = self._load_discover_results(file_name)
+        if not results:
+            print(f"{C.YELLOW}No discover results. "
+                  f"Run /scan <file> discover first.{C.RESET}")
+            return
+        if index < 1 or index > len(results):
+            print(f"{C.YELLOW}Index {index} out of range "
+                  f"(1-{len(results)}){C.RESET}")
+            return
+
+        item = results[index - 1]
+        lens_path = item.get("lens_path", "")
+        if not self._load_lens(lens_path):
+            print(f"{C.RED}Lens '{lens_path}' not found{C.RESET}")
+            return
+
+        print(f"{C.CYAN}Running discover lens #{index}: "
+              f"{item['name']}{C.RESET}")
+        self._run_single_lens_streaming(
+            lens_path, content, file_name,
+            label=f"{item['name']} ── {file_name}")
+
+    def _run_deep(self, content, file_name, goal, general=False):
+        """Deep mode: cook a 3-lens system for a specific area + run pipeline.
+
+        1. Resolve goal: int → discover result name, string → direct
+        2. Check cache: .deep/lenses/_deep/{slug}/
+        3. Cook 3 lenses if not cached (COOK_DEEP_PROMPT)
+        4. Run 3-call pipeline: primary → adversarial → synthesis
+        """
+        # Resolve goal
+        if isinstance(goal, int):
+            results = self._load_discover_results(file_name)
+            if not results:
+                print(f"{C.YELLOW}No discover results. "
+                      f"Run /scan <file> discover first.{C.RESET}")
+                return
+            if goal < 1 or goal > len(results):
+                print(f"{C.YELLOW}Index {goal} out of range "
+                      f"(1-{len(results)}){C.RESET}")
+                return
+            goal = results[goal - 1]["name"]
+
+        slug = re.sub(r'[^a-z0-9]+', '_', goal.lower()).strip('_')[:40]
+        deep_dir = (self.working_dir / ".deep" / "lenses"
+                    / "_deep" / slug)
+
+        # Check cache
+        primary_path = deep_dir / "primary.md"
+        adv_path = deep_dir / "adversarial.md"
+        synth_path = deep_dir / "synthesis.md"
+
+        if (primary_path.exists() and adv_path.exists()
+                and synth_path.exists()):
+            print(f"{C.DIM}Using cached deep lenses: {slug}{C.RESET}")
+            primary_prompt = primary_path.read_text(encoding="utf-8")
+            adv_prompt = adv_path.read_text(encoding="utf-8")
+            synth_prompt = synth_path.read_text(encoding="utf-8")
+        else:
+            # Cook 3-lens system
+            cook_prompt = COOK_DEEP_PROMPT.format(goal=goal)
+            sample = content[:2000] if len(content) > 2000 else content
+            user_input = (
+                f"Generate a 3-lens pipeline for: {goal}\n\n"
+                f"Sample artifact:\n\n{sample}")
+
+            print(f"{C.CYAN}Cooking deep lens system for: "
+                  f"{goal}{C.RESET}")
+            raw = self._call_model(cook_prompt, user_input, timeout=90)
+
+            parsed = self._parse_stage_json(raw, "cook_deep")
+            if not isinstance(parsed, list) or len(parsed) < 3:
+                print(f"{C.RED}Failed to generate deep lenses "
+                      f"(need 3, got {len(parsed) if isinstance(parsed, list) else 0}){C.RESET}")
+                return
+
+            # Extract by role
+            by_role = {}
+            for item in parsed:
+                role = item.get("role", "").lower()
+                if role in ("primary", "adversarial", "synthesis"):
+                    by_role[role] = item
+
+            if len(by_role) < 3:
+                # Fallback: assign by position
+                roles = ["primary", "adversarial", "synthesis"]
+                for i, role in enumerate(roles):
+                    if role not in by_role and i < len(parsed):
+                        by_role[role] = parsed[i]
+
+            if len(by_role) < 3:
+                print(f"{C.RED}Failed to generate all 3 lens "
+                      f"roles{C.RESET}")
+                return
+
+            # Save to cache
+            deep_dir.mkdir(parents=True, exist_ok=True)
+            for role in ("primary", "adversarial", "synthesis"):
+                text = by_role[role].get("prompt", "")
+                name = by_role[role].get("name", role)
+                (deep_dir / f"{role}.md").write_text(
+                    text, encoding="utf-8")
+                preview = text[:60] + ("..." if len(text) > 60 else "")
+                print(f"  {C.GREEN}{role}{C.RESET} ({name}): "
+                      f"{C.DIM}{preview}{C.RESET}")
+
+            primary_prompt = by_role["primary"]["prompt"]
+            adv_prompt = by_role["adversarial"]["prompt"]
+            synth_prompt = by_role["synthesis"]["prompt"]
+
+        # Run 3-call pipeline
+        content_label = "INPUT" if general else "SOURCE CODE"
+
+        # Call 1: Primary
+        print(f"\n{C.BOLD}{C.BLUE}── Primary: {goal} ── "
+              f"{file_name} ──{C.RESET}")
+        primary_backend = ClaudeBackend(
+            model=self.session.model,
+            working_dir=str(self.working_dir),
+            system_prompt=primary_prompt,
+            tools=False,
+        )
+        primary_output = self._stream_and_capture(
+            primary_backend, f"Analyze this deeply.\n\n{content}")
+
+        if primary_output and not self._interrupted:
+            self._save_deep_finding(
+                file_name, f"deep_{slug}_primary", primary_output)
+
+        if not primary_output or self._interrupted:
+            return
+
+        # Call 2: Adversarial
+        adv_input = (
+            f"# {content_label}\n\n{content}\n\n---\n\n"
+            f"# STRUCTURAL ANALYSIS (from previous pass)\n\n"
+            f"{primary_output}"
+        )
+        print(f"\n{C.BOLD}{C.BLUE}── Adversarial: {goal} ──{C.RESET}")
+        adv_backend = ClaudeBackend(
+            model=self.session.model,
+            working_dir=str(self.working_dir),
+            system_prompt=adv_prompt,
+            tools=False,
+        )
+        adv_output = self._stream_and_capture(adv_backend, adv_input)
+
+        if adv_output and not self._interrupted:
+            self._save_deep_finding(
+                file_name, f"deep_{slug}_adversarial", adv_output)
+
+        if not adv_output or self._interrupted:
+            return
+
+        # Call 3: Synthesis
+        synth_input = (
+            f"# {content_label}\n\n{content}\n\n---\n\n"
+            f"# ANALYSIS 1: PRIMARY\n\n{primary_output}\n\n---\n\n"
+            f"# ANALYSIS 2: ADVERSARIAL\n\n{adv_output}"
+        )
+        print(f"\n{C.BOLD}{C.BLUE}── Synthesis: {goal} ──{C.RESET}")
+        synth_backend = ClaudeBackend(
+            model=self.session.model,
+            working_dir=str(self.working_dir),
+            system_prompt=synth_prompt,
+            tools=False,
+        )
+        synth_output = self._stream_and_capture(
+            synth_backend, synth_input)
+
+        if synth_output and not self._interrupted:
+            self._save_deep_finding(
+                file_name, f"deep_{slug}_synthesis", synth_output)
+
+        # Save combined
+        combined = (
+            f"# Deep Analysis: {goal} — {file_name}\n\n"
+            f"## PRIMARY\n\n{primary_output}\n\n"
+            f"## ADVERSARIAL\n\n{adv_output}\n\n"
+            f"## SYNTHESIS\n\n{synth_output or '(not completed)'}\n\n"
+        )
+        self._save_deep_finding(file_name, f"deep_{slug}", combined)
+        print(f"\n  {C.DIM}Use /fix to pick issues, or "
+              f"/fix auto to fix all{C.RESET}")
+
+    def _run_expand(self, content, file_name, indices_str=None,
+                    expand_mode=None, general=False):
+        """Expand mode: pick areas from discover, choose single/full per area.
+
+        1. Load discover results (auto-discover if needed)
+        2. Show list, prompt for area selection
+        3. For each selected area: prompt single/full prism (or use expand_mode)
+        4. Single: run existing discover lens (1 call)
+        5. Full: cook a full prism pipeline for the area + run (N calls)
+
+        expand_mode="single"|"full" applies to all selected areas.
+        expand_mode=None prompts per area (allows mixing).
+        """
+        # 1. Get discover results
+        results = self._load_discover_results(file_name)
+        if not results:
+            self._run_discover(content, file_name, general)
+            results = self._load_discover_results(file_name)
+            if not results:
+                return
+
+        # 2. Select areas
+        if indices_str:
+            indices = self._parse_selection(indices_str, len(results))
+        else:
+            print(f"\n{C.BOLD}Available areas:{C.RESET}\n")
+            for i, item in enumerate(results, 1):
+                print(f"  {C.CYAN}{i}.{C.RESET} "
+                      f"{C.GREEN}{item['name']}{C.RESET}")
+                print(f"     {C.DIM}{item['preview']}{C.RESET}")
+            try:
+                sel = input(
+                    f"\n  Select areas (e.g. 1,3,5 or "
+                    f"* for all): ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                return
+            if not sel:
+                return
+            indices = self._parse_selection(sel, len(results))
+
+        if not indices:
+            print(f"{C.YELLOW}No valid areas selected{C.RESET}")
+            return
+
+        # 3. Per-area mode choice
+        area_configs = []
+        if expand_mode:
+            # Global mode: all areas get the same prism
+            for idx in indices:
+                area_configs.append(
+                    (idx, results[idx - 1], expand_mode))
+        else:
+            # Interactive: user picks per area (can mix)
+            for idx in indices:
+                item = results[idx - 1]
+                try:
+                    choice = input(
+                        f"  {C.GREEN}{item['name']}{C.RESET}"
+                        f" — [s]ingle / [f]ull prism: "
+                    ).strip().lower()
+                except (EOFError, KeyboardInterrupt):
+                    print()
+                    return
+                mode = "full" if choice.startswith("f") else "single"
+                area_configs.append((idx, item, mode))
+
+        # Summary
+        s_count = sum(1 for _, _, m in area_configs if m == "single")
+        f_count = sum(1 for _, _, m in area_configs if m == "full")
+        print(f"\n  {C.DIM}{len(area_configs)} areas: "
+              f"{s_count} single + {f_count} full{C.RESET}\n")
+
+        # 4. Cook and run each area
+        for idx, item, mode in area_configs:
+            area_name = item["name"]
+
+            if mode == "single":
+                lens_path = item.get("lens_path", "")
+                print(f"{C.CYAN}Single Prism: {area_name}{C.RESET}")
+                self._run_single_lens_streaming(
+                    lens_path, content, file_name,
+                    label=f"{area_name} ── {file_name}")
+            else:
+                print(f"{C.CYAN}Full Prism: {area_name}{C.RESET}")
+                self._run_expand_full(
+                    content, file_name, area_name, general)
+
             if self._interrupted:
                 break
 
-        if len(outputs) < 2 or self._interrupted:
-            return
+        print(f"\n  {C.DIM}Use /fix to pick issues, or "
+              f"/fix auto to fix all{C.RESET}")
 
-        # Synthesize across all lens outputs
-        print(f"\n{C.BOLD}{C.BLUE}── Synthesis across "
-              f"{len(outputs)} lenses ──{C.RESET}")
-        synth_parts = [f"# INPUT\n\n{content[:2000]}"]
-        for lname, output in outputs.items():
-            synth_parts.append(f"## LENS: {lname}\n\n{output}")
-        synth_input = "\n\n---\n\n".join(synth_parts)
+    def _run_expand_full(self, content, file_name, area_name,
+                         general=False):
+        """Cook and run a full prism pipeline for a specific area."""
+        slug = re.sub(r'[^a-z0-9]+', '_',
+                      area_name.lower()).strip('_')[:40]
+        cache_dir = (self.working_dir / ".deep" / "lenses"
+                     / "_expand" / slug)
 
-        synth_prompt = (
-            "You receive an artifact analyzed through multiple independent "
-            "analytical lenses. Synthesize:\n"
-            "1. Where do lenses AGREE? (convergent findings = high confidence)\n"
-            "2. Where do lenses DISAGREE? (divergent findings = hidden complexity)\n"
-            "3. What do ALL lenses assume without questioning? "
-            "(shared blind spots = deepest insight)\n"
-            "4. Name the conservation law: what property persists across "
-            "all analytical angles?\n"
-            "Be specific. Cite which lens found what."
-        )
-        synth_output = self._call_model(synth_prompt, synth_input, timeout=120)
-        if synth_output and not synth_output.startswith("["):
-            print(f"\n{synth_output}")
+        # Check cache
+        cached = self._load_cached_pipeline(cache_dir)
+        if cached:
+            print(f"  {C.DIM}Using cached pipeline: "
+                  f"{slug}{C.RESET}")
+            lenses = cached
+        else:
+            # Cook
+            sample = content[:2000] if len(content) > 2000 else content
+            prompt = COOK_FULL_PRISM_PROMPT.format(area=area_name)
+            user_input = (
+                f"Generate an analytical pipeline for: "
+                f"{area_name}\n\n"
+                f"Sample artifact:\n\n{sample}")
+
+            print(f"  {C.CYAN}Cooking pipeline for: "
+                  f"{area_name}{C.RESET}")
+            raw = self._call_model(prompt, user_input, timeout=90)
+
+            parsed = self._parse_stage_json(raw, "cook_expand")
+            if not isinstance(parsed, list) or len(parsed) < 2:
+                print(f"{C.RED}Failed to cook pipeline for "
+                      f"{area_name}{C.RESET}")
+                return
+
+            # Save to cache
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            lenses = []
+            for i, item in enumerate(parsed):
+                name = item.get("name", f"step_{i + 1}")
+                name = re.sub(r'[^a-z0-9_]', '_', name.lower())
+                text = item.get("prompt", "")
+                role = item.get("role", f"step_{i + 1}")
+                if not text:
+                    continue
+                (cache_dir / f"{i:02d}_{name}.md").write_text(
+                    text, encoding="utf-8")
+                lenses.append({"name": name, "prompt": text,
+                               "role": role, "order": i})
+                preview = text[:60] + (
+                    "..." if len(text) > 60 else "")
+                print(f"    {C.GREEN}{role}{C.RESET} ({name}): "
+                      f"{C.DIM}{preview}{C.RESET}")
+
+            if len(lenses) < 2:
+                print(f"{C.RED}Need at least 2 lenses for "
+                      f"full prism{C.RESET}")
+                return
+
+        self._run_cooked_pipeline(
+            lenses, content, file_name, area_name, general)
+
+    def _run_cooked_pipeline(self, lenses, content, file_name,
+                             area_name, general=False):
+        """Run an ordered list of lenses as a pipeline.
+
+        First lens gets raw content. Each subsequent lens receives
+        the raw content plus all previous analyses.
+        """
+        content_label = "INPUT" if general else "SOURCE CODE"
+        slug = re.sub(r'[^a-z0-9]+', '_',
+                      area_name.lower()).strip('_')[:40]
+        outputs = []
+
+        for i, lens in enumerate(lenses):
+            role = lens.get("role", lens["name"])
+
+            # Build message
+            if i == 0:
+                msg = f"Analyze this deeply.\n\n{content}"
+            else:
+                parts = [f"# {content_label}\n\n{content}"]
+                for j, prev in enumerate(outputs):
+                    prev_role = lenses[j].get(
+                        "role", lenses[j]["name"]).upper()
+                    parts.append(
+                        f"# ANALYSIS {j + 1}: {prev_role}"
+                        f"\n\n{prev}")
+                msg = "\n\n---\n\n".join(parts)
+
+            print(f"\n{C.BOLD}{C.BLUE}── {role}: "
+                  f"{area_name} ── {file_name} ──{C.RESET}")
+            backend = ClaudeBackend(
+                model=self.session.model,
+                working_dir=str(self.working_dir),
+                system_prompt=lens["prompt"],
+                tools=False,
+            )
+            output = self._stream_and_capture(backend, msg)
+
+            if output and not self._interrupted:
+                self._save_deep_finding(
+                    file_name,
+                    f"expand_{slug}_{role}", output)
+                outputs.append(output)
+
+            if not output or self._interrupted:
+                break
 
         # Save combined
-        combined_parts = [f"# Expand Analysis: {file_name}\n"]
-        for lname, output in outputs.items():
-            combined_parts.append(f"## {lname}\n\n{output}")
-        if synth_output:
-            combined_parts.append(f"## SYNTHESIS\n\n{synth_output}")
-        self._save_deep_finding(file_name, "expand",
-                                "\n\n".join(combined_parts))
+        if outputs:
+            combined_parts = [
+                f"# Expand Full Prism: {area_name} "
+                f"— {file_name}\n"]
+            for lens, out in zip(lenses, outputs):
+                r = lens.get("role", lens["name"]).upper()
+                combined_parts.append(
+                    f"## {r}\n\n{out}\n")
+            self._save_deep_finding(
+                file_name, f"expand_{slug}",
+                "\n".join(combined_parts))
+
+    def _stream_and_capture(self, backend, message):
+        """Stream output from a ClaudeBackend, capture and return text.
+
+        Shared by _run_deep pipeline calls. Returns captured text or "".
+        """
+        parser = StreamParser()
+        self._interrupted = False
+        had_output = False
+        output_buffer = []
+
+        original_sigint = signal.getsignal(signal.SIGINT)
+        def on_interrupt(sig, frame):
+            self._interrupted = True
+            backend.kill()
+        signal.signal(signal.SIGINT, on_interrupt)
+
+        thinking_shown = False
+        try:
+            for line in backend.send(message):
+                if self._interrupted:
+                    break
+                for evt, data in parser.parse_line(line):
+                    if evt == "text":
+                        if thinking_shown:
+                            sys.stdout.write(
+                                "\r" + " " * 30 + "\r")
+                            thinking_shown = False
+                        sys.stdout.write(data)
+                        sys.stdout.flush()
+                        output_buffer.append(data)
+                        had_output = True
+                    elif evt == "thinking":
+                        if not thinking_shown:
+                            sys.stdout.write(
+                                f"{C.DIM}thinking...{C.RESET}")
+                            sys.stdout.flush()
+                            thinking_shown = True
+                    elif evt == "result":
+                        usage = data.get("usage", {})
+                        self.session.total_input_tokens += usage.get(
+                            "input_tokens", 0)
+                        self.session.total_output_tokens += usage.get(
+                            "output_tokens", 0)
+                        cost = data.get("total_cost_usd",
+                                        data.get("cost_usd", 0))
+                        if isinstance(cost, (int, float)):
+                            self.session.total_cost_usd += cost
+        finally:
+            signal.signal(signal.SIGINT, original_sigint)
+            if self._interrupted:
+                print(f"\n{C.YELLOW}interrupted{C.RESET}")
+            elif had_output:
+                print()
+            print()
+
+        return "".join(output_buffer)
 
     def _run_target(self, content, file_name, goal, general=False):
         """Target mode: cook a goal-specific lens + run it.
@@ -2099,55 +3259,10 @@ class PrismREPL:
             system_prompt=prompt,
             tools=False,
         )
-        parser = StreamParser()
-        self._interrupted = False
-        had_output = False
-        output_buffer = []  # capture for caching
+        msg = message or f"Analyze this deeply.\n\n{content}"
+        captured = self._stream_and_capture(backend, msg)
 
-        original_sigint = signal.getsignal(signal.SIGINT)
-        def on_interrupt(sig, frame):
-            self._interrupted = True
-            backend.kill()
-        signal.signal(signal.SIGINT, on_interrupt)
-
-        thinking_shown = False
-        try:
-            msg = message or f"Analyze this deeply.\n\n{content}"
-            for line in backend.send(msg):
-                if self._interrupted:
-                    break
-                for evt, data in parser.parse_line(line):
-                    if evt == "text":
-                        if thinking_shown:
-                            sys.stdout.write("\r" + " " * 30 + "\r")
-                            thinking_shown = False
-                        sys.stdout.write(data)
-                        sys.stdout.flush()
-                        output_buffer.append(data)
-                        had_output = True
-                    elif evt == "thinking":
-                        if not thinking_shown:
-                            sys.stdout.write(f"{C.DIM}thinking...{C.RESET}")
-                            sys.stdout.flush()
-                            thinking_shown = True
-                    elif evt == "result":
-                        usage = data.get("usage", {})
-                        self.session.total_input_tokens += usage.get("input_tokens", 0)
-                        self.session.total_output_tokens += usage.get("output_tokens", 0)
-                        cost = data.get("total_cost_usd", data.get("cost_usd", 0))
-                        if isinstance(cost, (int, float)):
-                            self.session.total_cost_usd += cost
-        finally:
-            signal.signal(signal.SIGINT, original_sigint)
-            if self._interrupted:
-                print(f"\n{C.YELLOW}interrupted{C.RESET}")
-            elif had_output:
-                print()
-            print()
-
-        captured = "".join(output_buffer)
-        # Auto-save to .deep/findings/ for future enrichment
-        if had_output and not self._interrupted:
+        if captured.strip() and not self._interrupted:
             self._save_deep_finding(file_name, lens_name, captured)
         return captured
 
@@ -2678,7 +3793,55 @@ class PrismREPL:
 
         return []
 
-    def _heal_fix_one(self, issue):
+    @staticmethod
+    def _extract_structural_context(findings_text):
+        """Extract conservation law + meta-law from L12 output.
+
+        Returns a compact string for injection into fix prompts.
+        Graceful: returns "" if nothing found.
+        """
+        if not findings_text:
+            return ""
+
+        parts = []
+
+        # Conservation law: ## Conservation Law, ## 12. CONSERVATION LAW, etc.
+        cl_match = re.search(
+            r'^##\s+(?:\d+\.\s*)?(?:The\s+)?Conservation\s+Law[^\n]*\n(.*?)(?=\n##\s|\Z)',
+            findings_text, re.MULTILINE | re.DOTALL | re.IGNORECASE)
+        if cl_match:
+            body = cl_match.group(1).strip()
+            if len(body) > 300:
+                body = body[:300].rsplit(" ", 1)[0] + "..."
+            parts.append(f"Conservation law: {body}")
+
+        # Meta-law: ## Meta-Law, ## 15. META-CONSERVATION LAW, ## 16. Meta-Law, etc.
+        ml_match = re.search(
+            r'^##\s+(?:\d+\.\s*)?(?:The\s+)?Meta[-\s](?:Conservation\s+)?Law[^\n]*\n(.*?)(?=\n##\s|\Z)',
+            findings_text, re.MULTILINE | re.DOTALL | re.IGNORECASE)
+        if ml_match:
+            body = ml_match.group(1).strip()
+            if len(body) > 200:
+                body = body[:200].rsplit(" ", 1)[0] + "..."
+            parts.append(f"Meta-law: {body}")
+
+        return "\n\n".join(parts)
+
+    @staticmethod
+    def _diff_issues(old_issues, new_issues):
+        """Return issues from new_issues not present in old_issues.
+
+        Compares by (location, description[:50]) signature.
+        """
+        def _sig(issue):
+            loc = issue.get("location", issue.get("file", ""))
+            desc = issue.get("description", "")[:50].lower().strip()
+            return (loc, desc)
+
+        old_sigs = {_sig(i) for i in old_issues}
+        return [i for i in new_issues if _sig(i) not in old_sigs]
+
+    def _heal_fix_one(self, issue, structural_context=""):
         """Apply a fix for one issue. Returns 'approved'/'rejected'/'instructed'."""
         fname = issue.get("file", "unknown")
         title = issue.get("title", "")
@@ -2720,6 +3883,13 @@ class PrismREPL:
             fix_msg += (
                 f"\nRelevant code (with line numbers):\n"
                 f"```\n{snippet}\n```\n"
+            )
+        if structural_context:
+            fix_msg += (
+                f"\n## Structural context (from L12 analysis)\n"
+                f"{structural_context}\n\n"
+                f"This issue is fixable. Do not fight structural "
+                f"constraints — work within them.\n"
             )
         fix_msg += (
             "\nLocate the exact method and line before editing. "

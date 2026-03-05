@@ -89,7 +89,7 @@ System prompts are cognitive lenses. They change how models frame problems, not 
 - **Front-loading bugs kills L12.** Variant A (238w, "First: identify every concrete bug...") caused Haiku to produce 27-line checklist. The word "First" reframes the pipeline as a checklist. Solution: append bugs at the end, after the proven pipeline.
 - **Tested on 3 real codebases:** Starlette (333 lines, 11 bugs), Click (417 lines, 9 bugs), Tenacity (331 lines, 8 bugs). All produce conservation law + meta-law + bug table.
 - **Reliability: ~67% first try on complex targets, 100% on retry.** Tenacity specifically triggers conversation mode on first attempt ~33% of the time.
-- **L12 Practical C is now the default for `/scan`.** `/scan file` = single L12. `/scan file full` = 3-call pipeline.
+- **L12 Practical C is now the default for `/scan`.** `/scan file` = single L12. `/scan file full` = 3-call pipeline. `/scan file discover` = cook area lenses, show numbered list. `/scan file target=N` = run Nth discover lens. `/scan file deep=N` or `deep="X"` = cook 3-lens system + run pipeline. `/scan file fix` = closed-loop scan→fix→re-scan (interactive). `/scan file fix auto` = same, fully automatic.
 
 ### Cross-model character
 - **Opus** = ontological depth (names what things ARE, spontaneous math). **Sonnet** = operational precision (names what things DO, most reusable names). **Haiku** = mechanistic coverage (names HOW things BREAK, best code improvements). Gap widens at higher levels.
@@ -118,7 +118,7 @@ System prompts are cognitive lenses. They change how models frame problems, not 
 |------|---------|
 | `prism.py` | Prism — structural analysis through cognitive lenses, any domain (main tool) |
 | `deep.sh` | CLI lens analysis tool (standalone) |
-| `test_plan_pipeline.py` | Tests for prism.py (7 tests) |
+| `test_plan_pipeline.py` | Tests for prism.py (20 tests) |
 | **Lenses** | |
 | `lenses/` | 6 portfolio lenses + L12 structural + L12 pipeline variants (adversarial, synthesis, general) |
 | `lenses/l12.md` | L12 meta-conservation pipeline — default for `/scan` (332w) |
