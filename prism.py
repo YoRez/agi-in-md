@@ -1324,9 +1324,10 @@ class PrismREPL:
                         summary = ", ".join(parts)
                         self._last_action = (action_type, {"issues": issues})
                         print(f"  {C.CYAN}{len(open_issues)} issues "
-                              f"({summary}). "
-                              f"Type a number to fix, or /fix to pick"
-                              f"{C.RESET}")
+                              f"({summary}).{C.RESET}\n"
+                              f"  {C.DIM}  Type a number to fix one issue{C.RESET}\n"
+                              f"  {C.DIM}  /fix          pick issues interactively{C.RESET}\n"
+                              f"  {C.DIM}  /fix auto     fix all issues (up to 3 passes){C.RESET}")
                 except (json.JSONDecodeError, OSError):
                     pass
 
@@ -1946,7 +1947,7 @@ class PrismREPL:
             f"## SYNTHESIS\n\n{synth_output or '(not completed)'}\n\n"
         )
         self._save_deep_finding(file_name, "full", combined)
-        print(f"\n  {C.DIM}Use /fix to fix issues from this analysis{C.RESET}")
+        print(f"\n  {C.DIM}Use /fix to pick issues, or /fix auto to fix all{C.RESET}")
 
     def _run_expand(self, content, file_name, general=False):
         """Expand mode: auto-cook domain lenses + run all + synthesize.

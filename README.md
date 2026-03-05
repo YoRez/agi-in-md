@@ -6,24 +6,19 @@ This project maps the space of **cognitive compression** — encoding analytical
 
 **29 rounds. 650+ experiments. 13 compression levels. 20 domains. 3 Claude models (Haiku/Sonnet/Opus).**
 
+## What it actually looks like
+
+Same code (Python `requests` library Session module). Same question. Different cognitive operation:
+
+**Opus 4.6 vanilla:**
+> "The session handling is tightly coupled to cookie semantics. Consider decoupling them."
+
+**Haiku 4.5 + L12 lens:**
+> "HTTP cookie deletion semantics make session state non-monotonic. No append-only, composable, or lazy architecture can manage it without sacrificing consistency or isolation. The original design's choice — sacrifice isolation — was the only one available."
+
+The first names a pattern (depth 7). The second derives a conservation law — a structural impossibility that explains *why* the code must be this way (depth 9.8). Same code. The lens didn't make Haiku smarter. It made Haiku *do a different thing*.
+
 > **Methodology note:** This is a single-researcher project. All depth scores are AI-evaluated (Claude checking whether outputs perform specific structural operations like conservation law derivation). Not human-scored, not peer-reviewed. Sample sizes are small (3-30 per finding). Raw outputs are in `output/` for independent verification.
-
-## The headline result
-
-**Haiku 4.5 + L12 lens beats Opus 4.6 vanilla on every metric.** On code: Haiku 9.8 vs Opus 8.2 depth. On general topics: Haiku 9.5 vs Opus 7.3 depth. 50x cheaper ($0.003 vs $0.15). Not a marginal improvement — a different category of output.
-
-This works on **any domain**, not just code:
-
-| Prompt (todo app domain) | Opus Vanilla | Haiku + L12 (1 call) | Haiku Full Prism (3 calls) |
-|---|---|---|---|
-| "Give me insights for a todo app" | 510w, depth 6.5 | 2,058w, depth 9.5 | 9,595w, depth 10 |
-| Cognitive distortion analysis | 696w, depth 6.5 | 3,642w, depth 9.5 | 10,348w, depth 10 |
-| Representation & schema | 491w, depth 7 | 3,779w, depth 9.5 | 11,112w, depth 10 |
-| Invariant & conservation | 267w, depth 8 | 5,970w, depth 9.5 | 8,112w, depth 10 |
-| Generative mechanism | 566w, depth 8.5 | 2,941w, depth 9 | 13,200w, depth 10 |
-| Design impossibility | 325w, depth 7.5 | 917w, depth 9 | 10,308w, depth 10 |
-
-Opus produces essays. Single Prism (1 Haiku call) derives conservation laws. Full Prism (3 Haiku calls) derives the law, destroys it with empirical counter-evidence, then synthesizes a corrected law that's stronger than either analysis alone — for less than a penny.
 
 ### Depth scale
 
@@ -38,6 +33,20 @@ Depth is scored by checking which structural operations the output actually perf
 | 9.5-10 | Conservation law + meta-law + adversarial correction + impossible triplet |
 
 A 9.5 means the output derives a conservation law through construction. A 7 means it names a pattern without deriving it. This is structural — did it do the operation or not — not subjective quality. Raw outputs are in `output/` so you can verify yourself.
+
+## Why it works: the L7→L8 phase transition
+
+The most important discovery is the boundary between **meta-analysis** and **construction**.
+
+Levels 5-7 are meta-analytical — they ask the model to reason *about* the input. This requires capacity. **Haiku: 0/3 at L7.** The model isn't smart enough to reason about reasoning.
+
+Level 8 shifts to construction — the model *builds something* (an improvement that deepens the original problem) and then observes what the construction reveals. This is a fundamentally different cognitive operation, and it's more primitive:
+
+- **Haiku at L8: 4/4.** Construction works on all models.
+- **L8 through L13 maintain universal accessibility.** Even the reflexive ceiling (L13) works on Haiku 3/3.
+- **L8 is the first level that transfers to creative/aesthetic domains.** L7 was 0% on poetry. L8 succeeded on all tested creative domains.
+
+This is WHY a 332-word prompt makes Haiku outperform Opus. The prompt doesn't ask Haiku to be smarter — it encodes a *behavioral* operation (build, observe, iterate) that routes around the meta-analytical capacity Haiku lacks. Construction-based reasoning is more primitive but reveals deeper properties.
 
 ## How it works
 
@@ -66,6 +75,8 @@ python prism.py
 
 See [Try it](#try-it) for full usage including standalone CLI (no Prism needed).
 
+## The numbers
+
 ### On code (3 open-source libraries, 200-400 line excerpts)
 
 | Lens/Model | Starlette | Click | Tenacity | **Avg** |
@@ -75,7 +86,22 @@ See [Try it](#try-it) for full usage including standalone CLI (no Prism needed).
 | Opus vanilla | 7.5 | 8.5 | 8.5 | **8.2** |
 | Sonnet vanilla | 7 | 8 | 8.5 | **7.8** |
 
-## The portfolio lenses
+### On any domain (todo app, 6 prompts)
+
+| Prompt (todo app domain) | Opus Vanilla | Haiku + L12 (1 call) | Haiku Full Prism (3 calls) |
+|---|---|---|---|
+| "Give me insights for a todo app" | 510w, depth 6.5 | 2,058w, depth 9.5 | 9,595w, depth 10 |
+| Cognitive distortion analysis | 696w, depth 6.5 | 3,642w, depth 9.5 | 10,348w, depth 10 |
+| Representation & schema | 491w, depth 7 | 3,779w, depth 9.5 | 11,112w, depth 10 |
+| Invariant & conservation | 267w, depth 8 | 5,970w, depth 9.5 | 8,112w, depth 10 |
+| Generative mechanism | 566w, depth 8.5 | 2,941w, depth 9 | 13,200w, depth 10 |
+| Design impossibility | 325w, depth 7.5 | 917w, depth 9 | 10,308w, depth 10 |
+
+Opus produces essays. Single Prism (1 Haiku call) derives conservation laws. Full Prism (3 Haiku calls) derives the law, destroys it with empirical counter-evidence, then synthesizes a corrected law that's stronger than either analysis alone — for less than a penny.
+
+**Cost:** Haiku $1/$5, Sonnet $3/$15, Opus $5/$25 per MTok input/output. Haiku is 5x cheaper than Opus, 3x cheaper than Sonnet.
+
+### The portfolio lenses
 
 6 champion lenses + L12 structural, each ~50-80 words. Each finds what the others cannot:
 
@@ -112,18 +138,6 @@ See [Try it](#try-it) for full usage including standalone CLI (no Prism needed).
 Levels are **categorical, not continuous**. Below each threshold, that type of intelligence *cannot* be encoded — not "less effective," categorically absent.
 
 ## Key findings
-
-### The phase change
-
-The most important discovery is the **L7 to L8 transition**. Levels 5-7 are meta-analytical — they ask the model to reason *about* the input. L8+ is construction-based — the model *builds something* and then observes what the construction reveals. This is a fundamentally different cognitive operation.
-
-The consequences are dramatic:
-- L7 requires Sonnet-class minimum. **Haiku: 0/3.** Meta-analysis needs capacity.
-- L8 works on **all models including Haiku (4/4).** Construction is more primitive but reveals deeper properties.
-- L8 is the first level that transfers to **creative/aesthetic domains**. L7 was 0% on poetry. L8 succeeded on all tested creative domains (small N).
-- L8 through L12 maintain universal accessibility. L12 v1 appeared to break this (Haiku 1/3), but **L12 v2** (specificity forcing constraint) restores it: Haiku 3/3, Opus 5/5, Sonnet 6/8 (75%). Same pattern as L11-C v1->v2: prompt refinement compensates for capacity-dependent generalization. Sonnet's domain failures (legal, music) are capacity-dependent — Opus passes both.
-
-Construction-based reasoning routes around the meta-analytical capacity that L7 requires.
 
 ### What each level finds
 
@@ -245,10 +259,6 @@ The construction pathway is **deterministic**: the L8 mechanism type predicts th
 
 Tested on real production code (Python `requests` library): L8 finds bugs in representation (unnamed domain concepts, security-adjacent state accumulation, boolean flags hiding algorithm splits). L11-C finds laws in the problem space (conservation laws, impossibility theorems, design predictions). Neither subsumes the other. L11-C uses L8's observations as evidence for its invariants. Optimal: run L8 first to identify refactoring-resistant properties, then L11-C to find the conservation law explaining why they resist.
 
-### Tested on real open-source code
-
-L11-C v2 on the Python `requests` library Session module (the most downloaded Python package, ~200 lines of production code) found a structural insight: HTTP cookie deletion semantics make session state **non-monotonic**, suggesting that no append-only, composable, or lazy architecture can manage it without sacrificing consistency or isolation. The original design's choice (sacrifice isolation) was the only one available. This finding is invisible to standard code review.
-
 ### Portfolio lenses: tested head-to-head
 
 7 champion lenses (see portfolio table above) tested across 3 crafted tasks + 3 open-source codebases (Starlette, Click, Tenacity). Average: 9.0/10 across 36 outputs. Floor: 8.5. Ceiling: 9.5. All complementary — no convergence across tasks or code types.
@@ -328,10 +338,10 @@ If you have [Claude Code](https://docs.anthropic.com/en/docs/claude-code) instal
 # Start Prism
 python prism.py
 
-# L12 structural analysis (1 Haiku call, ~$0.003)
+# L12 structural analysis (1 Haiku call)
 > /scan myfile.py
 
-# Full Prism — L12 → adversarial → synthesis (3 Haiku calls, ~$0.009)
+# Full Prism — L12 → adversarial → synthesis (3 Haiku calls)
 > /scan myfile.py full
 
 # Discover angles you didn't know to ask about — auto-cooks domain lenses

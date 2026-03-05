@@ -1,12 +1,13 @@
 #!/bin/bash
 # deep.sh — Deep analysis using proven cognitive lenses
 #
-# Portfolio of 5 champion lenses (9-9.5/10 on Haiku):
+# Portfolio of 6 champion lenses (9-9.5/10 on Haiku):
 #   pedagogy  — What patterns does this teach? What breaks when someone copies them?
 #   claim     — What claims does this embed? What if they're false?
 #   scarcity  — What does this assume will never run out?
 #   rejected  — What alternatives were rejected? What invisible problems would they create?
 #   decay     — What degrades silently over time?
+#   contract  — Interface promises vs implementation reality
 #
 # Usage:
 #   ./deep.sh file.py                         # Auto-select best lens
@@ -25,7 +26,7 @@ LENS=""
 VERBOSE=0
 
 # Available lenses
-LENSES=(pedagogy claim scarcity rejected_paths degradation)
+LENSES=(pedagogy claim scarcity rejected_paths degradation contract)
 
 # Parse flags
 while [[ $# -gt 0 && "$1" == -* ]]; do
@@ -44,7 +45,8 @@ while [[ $# -gt 0 && "$1" == -* ]]; do
             echo "  scarcity       What does this assume will never run out?"
             echo "  rejected_paths What rejected alternatives would create invisible problems?"
             echo "  degradation    What degrades silently over time?"
-            echo "  all            Run ALL 5 lenses (comprehensive)"
+            echo "  contract       Interface promises vs implementation reality"
+            echo "  all            Run ALL 6 lenses (comprehensive)"
             echo "  (omit)         Auto-select best lens for input"
             echo ""
             echo "Options:"
@@ -92,11 +94,8 @@ run_lens() {
         return 1
     fi
 
-    local prompt
-    prompt="$(cat "$lens_file")"
-
     CLAUDECODE= claude -p --model "$MODEL" --output-format text \
-        --system-prompt "$prompt" \
+        --system-prompt-file "$lens_file" \
         "$QUESTION
 
 $INPUT" < /dev/null
@@ -104,8 +103,7 @@ $INPUT" < /dev/null
 
 # Auto-select lens
 auto_select() {
-    local selector_prompt
-    selector_prompt="$(cat "$LENS_DIR/selector.md")"
+    local selector_prompt="You are a lens selector. Given content and a question, reply with ONLY the single best lens name from: pedagogy, claim, scarcity, rejected_paths, degradation, contract. No explanation, just the lens name."
 
     local preview
     # Send first 500 chars of input + question to selector
@@ -113,7 +111,7 @@ auto_select() {
 
     local selected
     selected=$(CLAUDECODE= claude -p --model haiku --output-format text \
-        --system-prompt "$selector_prompt" \
+        --append-system-prompt "$selector_prompt" \
         "Question: $QUESTION
 
 Content (preview): $preview" < /dev/null 2>/dev/null)
@@ -138,6 +136,7 @@ Content (preview): $preview" < /dev/null 2>/dev/null)
             *scarci*) selected="scarcity" ;;
             *reject*) selected="rejected_paths" ;;
             *degrad*|*decay*) selected="degradation" ;;
+            *contract*|*interface*) selected="contract" ;;
             *) selected="pedagogy" ;;  # Default to champion
         esac
     fi
@@ -147,8 +146,8 @@ Content (preview): $preview" < /dev/null 2>/dev/null)
 
 # Main execution
 if [ "$LENS" = "all" ]; then
-    # Run all 5 lenses in parallel
-    echo "Running all 5 lenses on $MODEL..." >&2
+    # Run all 6 lenses in parallel
+    echo "Running all 6 lenses on $MODEL..." >&2
     echo "" >&2
 
     TMPDIR_DEEP=$(mktemp -d)

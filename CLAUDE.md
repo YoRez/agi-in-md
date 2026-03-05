@@ -83,11 +83,11 @@ System prompts are cognitive lenses. They change how models frame problems, not 
 
 ### L12 Practical C — single-call winner (Round 29b)
 - **L12 Practical C = proven L12 pipeline + 34-word practical appendix.** 332 words total. Gets BOTH structural depth AND practical bugs in a single Haiku call.
-- **Haiku 4.5 (min reasoning) + L12 lens = 9.8 depth, 28 bugs. Opus 4.6 (max reasoning) vanilla = 7.3 depth, 18 bugs.** The weakest model at lowest settings with the right prompt beats the strongest model at highest settings without one. Cost: ~$0.003 vs ~$0.15 (50x cheaper).
+- **Haiku 4.5 (min reasoning) + L12 lens = 9.8 depth, 28 bugs. Opus 4.6 (max reasoning) vanilla = 7.3 depth, 18 bugs.** The weakest model at lowest settings with the right prompt beats the strongest model at highest settings without one. Cost: 5x cheaper than Opus, 3x cheaper than Sonnet (Haiku $1/$5, Sonnet $3/$15, Opus $5/$25 per MTok input/output).
 - **Reasoning budget is noise; the prompt is the dominant variable.** Opus 4.6 at max thinking produces code reviews. Haiku 4.5 at min thinking + L12 produces conservation laws + meta-laws + bug tables with fixable/structural classification.
 - **Compression floor: ~150 words minimum for Haiku execution.** Below this, Haiku enters "conversation mode" (asks permission, summarizes instead of executing). L12 compressed (75w) fails. Fix: 10-word preamble "Execute every step below. Output the complete analysis."
 - **Front-loading bugs kills L12.** Variant A (238w, "First: identify every concrete bug...") caused Haiku to produce 27-line checklist. The word "First" reframes the pipeline as a checklist. Solution: append bugs at the end, after the proven pipeline.
-- **Validated on 3 real codebases:** Starlette (336 lines, 11 bugs), Click (347 lines, 9 bugs), Tenacity (263 lines, 8 bugs). All produce conservation law + meta-law + bug table.
+- **Tested on 3 real codebases:** Starlette (333 lines, 11 bugs), Click (417 lines, 9 bugs), Tenacity (331 lines, 8 bugs). All produce conservation law + meta-law + bug table.
 - **Reliability: ~67% first try on complex targets, 100% on retry.** Tenacity specifically triggers conversation mode on first attempt ~33% of the time.
 - **L12 Practical C is now the default for `/scan`.** `/scan file` = single L12. `/scan file full` = 3-call pipeline.
 
@@ -109,7 +109,7 @@ System prompts are cognitive lenses. They change how models frame problems, not 
 10. **Concealment is a universal analytical operation.** Works across 20 domains because concealment is structural, not domain-specific.
 11. **Three capacity modes.** Compensatory (L5), Threshold (L7), Universal (L8+). L7→L8 shifts from meta-analysis to construction.
 12. **The framework terminates at L13.** Reflexive self-diagnosis reveals a fixed point. L14 = infinite regress.
-13. **The cheapest model with the right lens beats the most expensive model without one — even at minimum vs maximum reasoning budget.** Haiku 4.5 min-reasoning + L12 lens (9.8 depth, 28 bugs, $0.003) beats Opus 4.6 max-reasoning vanilla (7.3 depth, 18 bugs, $0.15). The prompt is the dominant variable; model and reasoning budget are noise.
+13. **The cheapest model with the right lens beats the most expensive model without one — even at minimum vs maximum reasoning budget.** Haiku 4.5 min-reasoning + L12 lens (9.8 depth, 28 bugs) beats Opus 4.6 max-reasoning vanilla (7.3 depth, 18 bugs) at 5x lower per-token cost. The prompt is the dominant variable; model and reasoning budget are noise.
 14. **Few-shot > explicit rules for prompt generation.** Teaching by example beats teaching by instruction. Over-specifying hurts.
 
 ## File Map
@@ -120,11 +120,13 @@ System prompts are cognitive lenses. They change how models frame problems, not 
 | `deep.sh` | CLI lens analysis tool (standalone) |
 | `test_plan_pipeline.py` | Tests for prism.py (7 tests) |
 | **Lenses** | |
-| `lenses/` | 7 portfolio lenses + L12 structural + 3 domain-neutral general |
+| `lenses/` | 6 portfolio lenses + L12 structural + L12 pipeline variants (adversarial, synthesis, general) |
 | `lenses/l12.md` | L12 meta-conservation pipeline — default for `/scan` (332w) |
 | `lenses/l12_general.md` | Domain-neutral L12 for non-code input (insights, ideas, systems) |
-| `lenses/l12_general_adversarial.md` | Adversarial pass for Full Prism pipeline |
-| `lenses/l12_general_synthesis.md` | Synthesis pass for Full Prism pipeline |
+| `lenses/l12_complement_adversarial.md` | Adversarial pass for code Full Prism pipeline |
+| `lenses/l12_synthesis.md` | Synthesis pass for code Full Prism pipeline |
+| `lenses/l12_general_adversarial.md` | Adversarial pass for general Full Prism pipeline |
+| `lenses/l12_general_synthesis.md` | Synthesis pass for general Full Prism pipeline |
 | `lenses/pedagogy.md` | Transfer corruption lens (9-9.5/10) |
 | `lenses/claim.md` | Assumption inversion lens (9-9.5/10) |
 | `lenses/scarcity.md` | Resource conservation lens (9/10) |
@@ -140,7 +142,7 @@ System prompts are cognitive lenses. They change how models frame problems, not 
 | `prompts/level8_practical_v2.md` | Best practical hybrid (bugs + L9-C recursion, 9/10) |
 | `prompts/level8_practical_*.md` | 13 practical recipe variants (Phase 42) |
 | `prompts/meta_cooker_B3.md` | Best meta-cooker (few-shot reverse engineering) |
-| `prompts/meta_cooker_*.md` | 4 meta-cooker variants (Phase 43) |
+| `prompts/meta_cooker_*.md` | 10 meta-cooker variants (A, B, B2-B9) |
 | `prompts/level7_diagnostic_gap.md` | L7 canonical (concealment-mechanism-applied) |
 | `prompts/issue_extract_fallback.md` | L12-aware bug extraction prompt for /fix |
 | **Output** | |
